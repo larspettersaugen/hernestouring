@@ -1,6 +1,5 @@
 node_modules
 .env
-.env.local
 uploads
 prisma/dev.db
 prisma/dev.db-journal
@@ -9,3 +8,5 @@ prisma/dev.db-journal
 .next/
 out/
 .vercel
+.env*.local
+tsconfig.tsbuildinfo
