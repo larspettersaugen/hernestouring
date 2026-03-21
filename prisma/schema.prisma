@@ -1,0 +1,335 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String?  // null for OAuth users (e.g. Google)
+  name      String?
+  image     String?  // avatar URL from OAuth
+  role      String   @default("viewer") // viewer | power_user | editor | admin  (viewer=basic, power_user=see more, editor/admin=masters)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Person?  // optional link to Person profile
+}
+
+model Person {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // musician | superstar | crew | tour_manager | driver
+  birthdate DateTime?
+  phone      String?
+  email      String?
+  streetName String?
+  zipCode    String?
+  county     String?
+  timezone   String?  // e.g. Europe/Oslo - for displaying times in person's local timezone
+  notes     String?
+  userId    String?  @unique // link to User account for app users
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  invites       Invite[]
+  travelingMembers TravelGroupMember[]
+  contacts         Contact[]
+  groupMembers    GroupMember[]
+}
+
+model Group {
+  id        String        @id @default(cuid())
+  name      String        // e.g. "Astrid S 2025", "Chris Holsten 2026"
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  members   GroupMember[]
+}
+
+model GroupMember {
+  id       String   @id @default(cuid())
+  groupId  String
+  group    Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  personId String
+  person   Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  role     String  @default("crew") // role when added from this group
+  subgroup String? // e.g. "Band", "Crew" – groups members in the people section
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([groupId, personId])
+}
+
+model Invite {
+  id        String   @id @default(cuid())
+  personId  String
+  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  usedAt   DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String   // artist/project name, e.g. "Chris Holsten"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tours     Tour[]
+}
+
+model Tour {
+  id               String              @id @default(cuid())
+  projectId        String?
+  project          Project?            @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  name             String              // tour name, e.g. "Oppe På Månen Tour"
+  timezone         String              @default("UTC")
+  startDate        DateTime?           // tour period start
+  endDate          DateTime?           // tour period end
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  dates            TourDate[]
+  flights          Flight[]
+  contacts         Contact[]
+  travelingMembers TravelGroupMember[]
+  daySheetTemplates DaySheetTemplate[]
+}
+
+model DaySheetTemplate {
+  id        String   @id @default(cuid())
+  tourId    String?  // optional: templates are global, not tied to a tour
+  tour      Tour?    @relation(fields: [tourId], references: [id], onDelete: SetNull)
+  name      String   // e.g. "Standard concert day"
+  createdAt DateTime @default(now())
+  items     DaySheetTemplateItem[]
+}
+
+model DaySheetTemplateItem {
+  id              String   @id @default(cuid())
+  templateId      String
+  template        DaySheetTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  time            String   // "14:00"
+  endTime         String?
+  durationMinutes Int?
+  label           String   // "Soundcheck", "Doors", "Show"
+  notes           String?
+  sortOrder       Int      @default(0)
+  dayAfter        Boolean  @default(false)
+}
+
+model TourDate {
+  id            String   @id @default(cuid())
+  tourId        String
+  tour          Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  venueName     String
+  city          String
+  date          DateTime
+  endDate       DateTime? // for preproduction/rehearsal spans
+  kind          String   @default("concert") // concert | event | travelday | preproduction | rehearsal
+  status        String   @default("confirmed") // confirmed | tbc | cancelled | pitch | opportunity | lost_pitch
+  timezone      String?  // e.g. Europe/Oslo - derived from city or set manually
+  address       String?
+  promoterName  String?
+  promoterPhone String?
+  promoterEmail String?
+  notes         String?  // day notes for this date
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  scheduleItems ScheduleItem[]
+  transports  Transport[]
+  hotels      Hotel[]
+  contacts    Contact[]
+  dateMembers TourDateMember[]
+  advance     Advance?
+  advanceFiles AdvanceFile[]
+}
+
+model Advance {
+  id                     String   @id @default(cuid())
+  tourDateId             String   @unique
+  tourDate               TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  technicalInfo          String?  // stage specs, power, rigging, backline
+  rider                  String?  // catering, hospitality
+  logistics              String?  // load-in, parking, access
+  equipmentTransport     String?  // freight, trucking
+  technicalDone          Boolean  @default(false)
+  technicalCompromises   Boolean  @default(false)
+  riderDone              Boolean  @default(false)
+  riderCompromises       Boolean  @default(false)
+  logisticsDone          Boolean  @default(false)
+  logisticsCompromises   Boolean  @default(false)
+  equipmentTransportDone Boolean  @default(false)
+  equipmentTransportCompromises Boolean @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model AdvanceFile {
+  id             String   @id @default(cuid())
+  tourDateId     String
+  tourDate       TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  advanceSection String?  // technical | rider | logistics | equipmentTransport | null = central
+  filename       String   // original filename
+  storedName     String   @unique // unique name on disk
+  mimeType       String?
+  sizeBytes      Int?
+  createdAt      DateTime @default(now())
+}
+
+model VenueContact {
+  id        String    @id @default(cuid())
+  name      String
+  role      String    // free text: "venue", "promoter", etc.
+  phone     String?
+  email     String?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  contacts  Contact[]
+}
+
+model Contact {
+  id              String        @id @default(cuid())
+  tourId          String
+  tour            Tour          @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourDateId      String?       // optional link to specific date/venue
+  tourDate        TourDate?     @relation(fields: [tourDateId], references: [id], onDelete: SetNull)
+  personId        String?       // optional link to Person profile (crew/band)
+  person          Person?       @relation(fields: [personId], references: [id], onDelete: SetNull)
+  venueContactId  String?       // optional link to VenueContact (venue contacts database)
+  venueContact    VenueContact? @relation(fields: [venueContactId], references: [id], onDelete: SetNull)
+  name            String
+  role            String
+  phone           String?
+  email           String?
+  notes           String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model ScheduleItem {
+  id              String   @id @default(cuid())
+  tourDateId      String
+  tourDate        TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  time            String   // "14:00" or "14:00:00"
+  endTime         String?  // optional end time, e.g. "16:00"
+  durationMinutes Int?    // optional duration in minutes
+  label           String   // "Soundcheck", "Doors", "Show", etc.
+  notes           String?
+  sortOrder       Int      @default(0)
+  dayAfter        Boolean  @default(false) // true if time is after midnight (next calendar day)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Flight {
+  id            String   @id @default(cuid())
+  tourId        String
+  tour          Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourDateId    String?  // optional link to specific date
+  departureTime DateTime
+  arrivalTime   DateTime
+  departureAirport String
+  arrivalAirport   String
+  flightNumber String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  passengers   FlightPassenger[]
+}
+
+model FlightPassenger {
+  id                  String   @id @default(cuid())
+  flightId            String
+  flight              Flight   @relation(fields: [flightId], references: [id], onDelete: Cascade)
+  travelGroupMemberId String
+  travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
+  bookingRef          String?
+  createdAt           DateTime @default(now())
+  @@unique([flightId, travelGroupMemberId])
+}
+
+model TravelGroupMember {
+  id          String   @id @default(cuid())
+  tourId      String
+  tour        Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  personId    String?  // optional link to Person profile
+  person      Person?  @relation(fields: [personId], references: [id], onDelete: SetNull)
+  name        String
+  role        String   // e.g. "band", "crew", "tour manager"
+  subgroup    String?   // free text: "Crew", "Band", etc. – groups members in the people section
+  phone       String?
+  email       String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dateMembers TourDateMember[]
+  flightPassengers FlightPassenger[]
+  transportPassengers TransportPassenger[]
+  hotelGuests HotelGuest[]
+}
+
+model TourDateMember {
+  id                  String   @id @default(cuid())
+  tourDateId          String
+  tourDate            TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  travelGroupMemberId String
+  travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
+  @@unique([tourDateId, travelGroupMemberId])
+}
+
+model Transport {
+  id          String   @id @default(cuid())
+  tourDateId  String
+  tourDate    TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  type        String   // "bus", "car", "pickup"
+  time        String
+  dayAfter    Boolean  @default(false) // true if time is after midnight (next calendar day)
+  driver      String?
+  driverPhone String?
+  driverEmail String?
+  company     String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  passengers  TransportPassenger[]
+}
+
+model TransportPassenger {
+  id                  String   @id @default(cuid())
+  transportId         String
+  transport           Transport @relation(fields: [transportId], references: [id], onDelete: Cascade)
+  travelGroupMemberId String
+  travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
+  @@unique([transportId, travelGroupMemberId])
+}
+
+model Hotel {
+  id           String       @id @default(cuid())
+  tourDateId   String
+  tourDate     TourDate     @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  name         String
+  address      String?
+  checkIn      DateTime
+  checkOut     DateTime
+  notes        String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  guests       HotelGuest[]
+}
+
+model HotelGuest {
+  id                  String   @id @default(cuid())
+  hotelId             String
+  hotel               Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  travelGroupMemberId String
+  travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
+  roomNumber          String?
+  createdAt           DateTime @default(now())
+  @@unique([hotelId, travelGroupMemberId])
+}

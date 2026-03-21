@@ -1,0 +1,35 @@
+---
+description: Stability guidelines - risky areas, dev workflow, and troubleshooting
+alwaysApply: true
+---
+
+# Stability
+
+When making changes, avoid breaking localhost or the UI. Follow these guidelines.
+
+## Prerequisites
+
+- **Git repo**: The pre-commit hook (husky + lint-staged) only runs when the project is a Git repo. If `.git` does not exist, run `git init` so the hook can run `npm run check` on staged files before commits.
+
+## Risky areas (avoid or be extra careful)
+
+- `src/app/layout.tsx` – Prefer globals.css for base styles; avoid arbitrary Tailwind values
+- `src/app/globals.css` – Change sparingly
+- `tailwind.config.ts` content paths – Keep existing paths; do not broaden or change
+- `src/lib/api.ts` – Avoid changing response handling (e.g. res.json vs res.text)
+- Prefer theme classes (`bg-stage-dark`) over arbitrary values (`bg-[#0f0f12]`)
+- `src/components/DashboardLayoutClient.tsx` – Dashboard layout: sidebar is `hidden lg:flex`, mobile header is `flex lg:hidden`. Do not change these breakpoints or remove `isolate`/`shrink-0`/`w-full` from the layout containers.
+
+## Dev workflow
+
+- Before starting dev server: run `npm run dev:kill` first if another instance might be running
+- If localhost stops or UI breaks: suggest `npm run dev:kill` then `rm -rf .next` then `npm run dev`
+- Recommend hard refresh (Cmd+Shift+R) after changes
+
+## EMFILE / ulimit
+
+If EMFILE or "too many open files" appears: recommend `ulimit -n 10240` and adding to `~/.zshrc`
+
+## Error page
+
+Keep `error.tsx` and `global-error.tsx` using inline styles, not Tailwind, so they render when styles fail.

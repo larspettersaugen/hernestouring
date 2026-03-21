@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f0f12;
+  --foreground: #fafafa;
+  --accent: #f59e0b;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100vh;
+}
+
+/* Remove clock icon from all time inputs (schedule, templates, transport) */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none !important;
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+input[type="time"]::-webkit-inner-spin-button,
+input[type="time"]::-webkit-outer-spin-button {
+  display: none;
+}
+/* Reduce native time input segment highlight; ensure text stays light on dark theme */
+input[type="time"]::-webkit-datetime-edit {
+  background: transparent;
+  color: var(--foreground);
+}
+input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  background: transparent;
+  color: var(--foreground);
+}
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field {
+  color: var(--foreground);
+}
+input[type="time"]:focus {
+  outline: none;
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+@media print {
+  header,
+  nav[aria-label="Jump to section"],
+  .print\:hidden,
+  a[href="/dashboard"],
+  button {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: #111;
+  }
+  main {
+    padding-bottom: 0;
+  }
+  .bg-stage-card {
+    background: #fafafa;
+    border-color: #e5e5e5;
+  }
+  .text-white {
+    color: #111;
+  }
+  .text-stage-muted,
+  .text-zinc-400,
+  .text-stage-accent {
+    color: #333;
+  }
+  #schedule {
+    font-size: 0.8125rem;
+  }
+  #schedule h2 {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  #schedule li {
+    padding: 0.25rem 0.5rem !important;
+  }
+  #schedule .divide-y > * + * {
+    padding-top: 0.25rem;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Hernes Touring",
+  "short_name": "Hernes Touring",
+  "description": "Schedules, flights, transport and contacts for touring crew and bands",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f12",
+  "theme_color": "#0f0f12",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icon", "sizes": "48x48", "type": "image/png", "purpose": "any" }
+  ]
+}

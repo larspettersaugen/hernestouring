@@ -1,0 +1,72 @@
+# Deploy a public URL (Vercel + Neon)
+
+This app needs a **PostgreSQL** database and a **HTTPS** base URL so invite links and NextAuth work for people outside your laptop.
+
+**Local `.env`:** If you still have `DATABASE_URL="file:./dev.db"` from SQLite, replace it with a PostgreSQL URL (see `.env.example`). Prisma no longer accepts `file:` URLs for this project.
+
+## 1. Create a Postgres database (Neon)
+
+1. Sign up at [https://neon.tech](https://neon.tech) and create a project.
+2. Copy the connection string (use the **pooled** / **transaction** URL if Neon offers both; append `?sslmode=require` if not already present).
+
+## 2. Push the project to GitHub
+
+Vercel imports from Git. Commit and push this repository (including `prisma/migrations/`).
+
+## 3. Deploy on Vercel
+
+1. Go to [https://vercel.com](https://vercel.com) → **Add New** → **Project** → import the repo.
+2. **Environment variables** (Production, and Preview if you use previews):
+
+   | Name | Value |
+   |------|--------|
+   | `DATABASE_URL` | Your Neon connection string |
+   | `NEXTAUTH_SECRET` | `openssl rand -base64 32` |
+   | `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (replace after first deploy with the real URL, including custom domain if you add one) |
+   | Optional | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `BETA_JOIN_SECRET`, etc. |
+
+3. Deploy. The build runs `prisma migrate deploy` then `next build` (see `vercel.json`).
+
+4. After the first successful deploy, confirm **`NEXTAUTH_URL`** exactly matches the site URL (scheme + host, no trailing slash). Redeploy if you change it.
+
+## 4. Optional: demo data
+
+From your machine (with network access to Neon):
+
+```bash
+DATABASE_URL="postgresql://…" npx prisma db seed
+```
+
+## 5. Google sign-in (if you use it)
+
+In [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → your OAuth client → **Authorized redirect URIs**, add:
+
+`https://YOUR-PROJECT.vercel.app/api/auth/callback/google`
+
+## 6. Invites and beta links
+
+Use the **deployed** site (your `https://…` URL) when you add people and copy invite links. `NEXTAUTH_URL` should match that host so links stay correct.
+
+## Limitation: advance file uploads on Vercel
+
+Files for tour “advance” sections are stored under `./uploads` on disk. Vercel’s serverless filesystem is ephemeral, so those uploads are not suitable for production on Vercel without moving storage to S3, Vercel Blob, or similar.
+
+---
+
+## Local development
+
+Use PostgreSQL locally (same schema as production), for example:
+
+```bash
+docker run --name touring-pg -e POSTGRES_PASSWORD=dev -p 5432:5432 -d postgres:16
+```
+
+Set `DATABASE_URL` in `.env` (see `.env.example`), then:
+
+```bash
+npx prisma migrate dev
+npx prisma db seed   # optional
+npm run dev
+```
+
+If you still have an old SQLite `prisma/dev.db`, stop using it and point `DATABASE_URL` at Postgres instead; run `migrate dev` or `migrate deploy` against the new database.

@@ -1,0 +1,24 @@
+---
+description: Do not remove delete functionality; AI only deletes when user explicitly asks
+alwaysApply: true
+---
+
+# Preserve Delete Functionality
+
+When programming, do not remove or disable delete buttons and APIs. Users should be able to delete data (e.g. remove people from tours, delete schedule items).
+
+## AI never deletes on its own
+
+- Do not proactively suggest or implement deletions
+- Do not remove data, records, or functionality unless the user explicitly tells you to delete
+- When the user explicitly asks you to delete something, follow their instruction
+
+## Do not remove when refactoring
+
+- Delete buttons in the UI
+- DELETE API endpoints
+- Any code that allows users to remove work data
+
+## User-initiated deletions are allowed
+
+Users (admin/editor) may delete traveling group members, schedule items, and other work data. The APIs should support these actions.

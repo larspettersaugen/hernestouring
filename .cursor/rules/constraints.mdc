@@ -1,0 +1,21 @@
+---
+description: Do not change UI or localhost config when making edits
+alwaysApply: true
+---
+
+# Constraints
+
+When making changes to this project:
+
+## Do not change UI
+
+- Do not modify layout, styling, navigation, or component structure
+- Do not change sidebar, headers, colors, spacing, or visual design
+- Only change UI when the user explicitly asks for it
+
+## Do not change localhost
+
+- Keep `npm run dev` as `next dev` (port 3000)
+- Do not modify NEXTAUTH_URL in .env or .env.example
+- Do not change dev server port, host, or dev:kill script
+- Only change localhost config when the user explicitly asks for it

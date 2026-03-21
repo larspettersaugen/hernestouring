@@ -1,0 +1,25 @@
+---
+description: Run npm run dev when necessary so the app is ready for testing
+alwaysApply: true
+---
+
+# Run Dev Server When Necessary
+
+Run the development server when it would help the user test or view changes.
+
+## When to run
+
+- After making changes the user might want to test (UI, API, pages)
+- When the user asks to run the app or see changes
+- When debugging involves the running app
+
+## How to run
+
+1. Before starting: run `npm run dev:kill` first if another instance might be running
+2. Use the full path since the project is not in the workspace root:
+
+```bash
+cd /Users/larspettersaugen/touring-crew-app && npm run dev
+```
+
+3. Run in the background (`is_background: true`) so the terminal stays available for other commands.

@@ -1,0 +1,60 @@
+{
+  "name": "touring-crew-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx nodemon",
+    "dev:simple": "prisma generate && next dev -p 3000",
+    "dev:clean": "rm -rf .next && npm run dev",
+    "dev:kill": "lsof -ti:3000 2>/dev/null | xargs kill -9 2>/dev/null; lsof -ti:3001 2>/dev/null | xargs kill -9 2>/dev/null; lsof -ti:8080 2>/dev/null | xargs kill -9 2>/dev/null; echo Ports cleared",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "verify": "tsc --noEmit && next lint && next build",
+    "check": "tsc --noEmit && next lint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:clear-people": "node prisma/clear-people.cjs",
+    "db:assign-marius-pm": "node prisma/assign-marius-productionmanager.cjs",
+    "db:migrate-projects": "node prisma/migrate-to-projects.cjs",
+    "postinstall": "prisma generate",
+    "prepare": "husky"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "city-timezones": "^1.2.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.460.0",
+    "next": "14.2.18",
+    "next-auth": "^4.24.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.18",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.1",
+    "nodemon": "^3.1.9",
+    "postcss": "^8.4.49",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": "bash -c 'npm run check'"
+  }
+}

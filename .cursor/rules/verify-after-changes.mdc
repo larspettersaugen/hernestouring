@@ -1,0 +1,32 @@
+---
+description: Run verify after changes to ensure localhost keeps working
+alwaysApply: true
+---
+
+# Verify After Changes
+
+After making changes to this project, run `npm run check` to ensure the app still compiles and lints. Run `npm run verify` for larger changes.
+
+## When to run check (every change)
+
+- Any edit to the codebase
+- Layout, styling, API, globals.css, tailwind.config changes = always run check
+
+## When to run verify (full build)
+
+- Schema changes (Prisma, env)
+- New features or multi-file edits
+- Adding or removing dependencies
+- API or component refactors
+
+## What to do
+
+1. Run `npm run check` after edits (from project root: `touring-crew-app`)
+2. Run `npm run verify` for schema changes, new deps, multi-file refactors
+3. If verify or check fails: fix the reported errors before finishing
+4. If Prisma schema changed: also run `npx prisma generate` and `npx prisma db push` before verify
+
+## Commands
+
+- `npm run check` – TypeScript + lint only (faster, use after most edits)
+- `npm run verify` – TypeScript + lint + build (full check)

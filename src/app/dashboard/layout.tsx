@@ -1,0 +1,22 @@
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/session';
+import { DashboardLayoutClient } from '@/components/DashboardLayoutClient';
+import { MobileDayNav } from '@/components/MobileDayNav';
+import { TourDatesSidebarProvider } from '@/contexts/TourDatesSidebarContext';
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
+  if (!session?.user) redirect('/login');
+  return (
+    <div className="min-h-screen flex flex-col bg-stage-dark w-full overflow-hidden">
+      <div className="flex flex-1 min-h-0 w-full min-w-0 overflow-hidden">
+        <TourDatesSidebarProvider>
+          <DashboardLayoutClient user={session.user}>
+            {children}
+          </DashboardLayoutClient>
+        </TourDatesSidebarProvider>
+      </div>
+      <MobileDayNav />
+    </div>
+  );
+}

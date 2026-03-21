@@ -1,0 +1,7 @@
+{
+  "watch": ["prisma/schema.prisma"],
+  "ext": "prisma",
+  "ignore": ["src/**", "node_modules/**", ".next/**"],
+  "exec": "node scripts/dev.cjs",
+  "delay": "500"
+}
