@@ -20,7 +20,8 @@ Vercel imports from Git. Commit and push this repository (including `prisma/migr
 
    | Name | Value |
    |------|--------|
-   | `DATABASE_URL` | Your Neon connection string |
+   | `DATABASE_URL` | Neon **pooled** connection string (`-pooler` host, `sslmode=require`, `pgbouncer=true`) |
+   | `DIRECT_URL` | Neon **direct** connection string (same user/db; **no** `-pooler` in the host). Required so `prisma migrate deploy` on Vercel can connect (avoids P1001 / pooler issues). |
    | `NEXTAUTH_SECRET` | `openssl rand -base64 32` |
    | `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (replace after first deploy with the real URL, including custom domain if you add one) |
    | Optional | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY` (invites + **password reset**), `BETA_JOIN_SECRET`, etc. |
@@ -95,8 +96,9 @@ Open the deployment → **Building** → expand the log.
 
 | Symptom | What to do |
 |--------|------------|
+| **`P1001: Can't reach database server`** during build | Add **`DIRECT_URL`** in Vercel (Neon dashboard → **Connection details** → copy **direct** URI, not pooler). Keep **`DATABASE_URL`** as the **pooler** URL for the running app. Optional: add `connect_timeout=60` to both URLs. Open the Neon project in the dashboard once to wake compute, then **Redeploy**. |
 | **`prisma migrate deploy` failed** (P3009, “relation already exists”, drift) | Your Neon DB was likely created with `db push` before migrations. See README: use `npm run db:push` once to align, or [Prisma baselining](https://www.prisma.io/docs/guides/migrate/developing-with-create-only). Fix the DB, then **Redeploy**. |
-| **`DATABASE_URL` must start with `postgresql://`** | Add `DATABASE_URL` under Vercel → Settings → Environment Variables for **Production** (and Preview if needed). Redeploy. |
+| **`DATABASE_URL` must start with `postgresql://`** | Add `DATABASE_URL` (and **`DIRECT_URL`**) under Vercel → Settings → Environment Variables for **Production** (and Preview if needed). Redeploy. |
 | **`next build` / TypeScript errors** | Run `npm run verify` locally on `main` after `git pull`; fix errors, push again. |
 | **New tables missing in production** | Ensure **`prisma/migrations/`** is committed and pushed; Vercel only runs migrations that exist in the repo. |
 

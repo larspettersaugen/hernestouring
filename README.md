@@ -28,8 +28,9 @@ Use **one** PostgreSQL database. **Neon** is the recommended default (free tier,
 
    Edit **`.env`**:
 
-   - **`DATABASE_URL`** — In [Neon](https://neon.tech): create a project → copy the **connection string** (use the **pooled** / pooler host if offered). Paste it here.  
-     If Prisma errors on connect, see comments in `.env.example` (`sslmode=require`, remove `channel_binding=require` if present).
+   - **`DATABASE_URL`** — In [Neon](https://neon.tech): copy the **pooled** connection string (`-pooler` in the host).  
+   - **`DIRECT_URL`** — Copy Neon’s **direct** connection string (no `-pooler`). Prisma Migrate and **Vercel builds** use this; without it you may see **P1001** during deploy. For local Postgres only, set `DIRECT_URL` to the same value as `DATABASE_URL`.  
+     If Prisma errors on connect, see `.env.example` (`sslmode=require`, remove `channel_binding=require` on the pooler URL if present).
    - **`NEXTAUTH_SECRET`** — Run `openssl rand -base64 32` and paste the output.
    - **`NEXTAUTH_URL`** — For local dev: `http://localhost:3000`
 
