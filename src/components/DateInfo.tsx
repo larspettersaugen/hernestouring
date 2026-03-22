@@ -9,6 +9,7 @@ import { ContactsSection } from './ContactsSection';
 import { DateMembersSection } from './DateMembersSection';
 import { VenueContactPicker } from './VenueContactPicker';
 import { ShowStatusBadge } from './ShowStatusBadge';
+import { DateAdvanceCompleteInline } from './DateAdvanceCompleteInline';
 import { SHOW_STATUSES } from '@/lib/show-status';
 import { DATE_KINDS, getDateKindLabel } from '@/lib/date-kind';
 
@@ -44,6 +45,9 @@ export function DateInfo({
   contacts,
   travelingGroup,
   hideAllTourMessage,
+  advanceComplete,
+  advanceReady,
+  allowAdvanceComplete,
 }: {
   tourId: string;
   dateId: string;
@@ -59,6 +63,9 @@ export function DateInfo({
   promoterEmail?: string | null;
   allowEdit: boolean;
   extraActions?: React.ReactNode;
+  advanceComplete?: boolean;
+  advanceReady?: boolean;
+  allowAdvanceComplete?: boolean;
   contacts?: Contact[];
   travelingGroup: { id: string; name: string; role: string; subgroup: string | null; phone?: string | null; email?: string | null }[];
   hideAllTourMessage?: boolean;
@@ -226,7 +233,7 @@ export function DateInfo({
               value={vName}
               onChange={(e) => setVName(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               placeholder="e.g. Sentrum Scene"
             />
           </div>
@@ -237,7 +244,7 @@ export function DateInfo({
               value={vCity}
               onChange={(e) => setVCity(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               placeholder="e.g. Oslo"
             />
           </div>
@@ -250,7 +257,7 @@ export function DateInfo({
               value={vDate}
               onChange={(e) => setVDate(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
           </div>
           {(vKind === 'preproduction' || vKind === 'rehearsal') && (
@@ -261,7 +268,7 @@ export function DateInfo({
                 value={vEndDate}
                 onChange={(e) => setVEndDate(e.target.value)}
                 min={vDate}
-                className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
               />
             </div>
           )}
@@ -270,7 +277,7 @@ export function DateInfo({
             <select
               value={vKind}
               onChange={(e) => setVKind(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             >
               {DATE_KINDS.map((k) => (
                 <option key={k.value} value={k.value}>
@@ -284,7 +291,7 @@ export function DateInfo({
             <select
               value={vStatus}
               onChange={(e) => setVStatus(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             >
               {SHOW_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -301,7 +308,7 @@ export function DateInfo({
               type="text"
               value={vAddress}
               onChange={(e) => setVAddress(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               placeholder="Full address for Google Maps (e.g. Youngstorget 2, 0181 Oslo)"
             />
             <p className="text-xs text-stage-muted mt-1">
@@ -317,7 +324,7 @@ export function DateInfo({
               value={vPromoterName}
               onChange={(e) => setVPromoterName(e.target.value)}
               placeholder="Promoter name"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <div className="grid grid-cols-2 gap-2">
               <input
@@ -325,14 +332,14 @@ export function DateInfo({
                 value={vPromoterPhone}
                 onChange={(e) => setVPromoterPhone(e.target.value)}
                 placeholder="Phone"
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="email"
                 value={vPromoterEmail}
                 onChange={(e) => setVPromoterEmail(e.target.value)}
                 placeholder="Email"
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
             </div>
           </div>
@@ -341,7 +348,7 @@ export function DateInfo({
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
             >
               {loading ? 'Saving…' : 'Save'}
             </button>
@@ -366,18 +373,27 @@ export function DateInfo({
           <h1 className="text-xl font-bold text-white">
             {displayName}
           </h1>
-          <span className="text-xs text-stage-muted bg-stage-dark px-2 py-0.5 rounded">
+          <span className="text-xs text-stage-muted bg-stage-surface px-2 py-0.5 rounded">
             {getDateKindLabel(kind)}
           </span>
           <ShowStatusBadge status={status} />
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 flex-wrap justify-end">
           {extraActions}
+          {allowAdvanceComplete ? (
+            <DateAdvanceCompleteInline
+              tourId={tourId}
+              dateId={dateId}
+              advanceComplete={advanceComplete ?? false}
+              ready={advanceReady ?? false}
+              allowConfirm
+            />
+          ) : null}
           {allowEdit && (
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-white hover:border-stage-muted"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted"
               aria-label="Edit date info"
             >
               <Pencil className="h-4 w-4" />
@@ -437,7 +453,7 @@ export function DateInfo({
           role="region"
           aria-labelledby="date-day-details-toggle"
         >
-          <div className="rounded-lg border border-stage-border bg-stage-dark/50 px-3 py-2.5 mb-1">
+          <div className="rounded-lg border border-stage-border bg-stage-surface/50 px-3 py-2.5 mb-1">
             <DateMembersSection
               tourId={tourId}
               dateId={dateId}
@@ -504,7 +520,7 @@ export function DateInfo({
                           resetPromoterManualFields();
                         }}
                         disabled={promoterLoading}
-                        className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-stage-border text-stage-muted hover:text-white hover:border-stage-muted disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted disabled:opacity-50"
                       >
                         <PenLine className="h-3 w-3" /> Enter new promoter manually
                       </button>
@@ -529,28 +545,28 @@ export function DateInfo({
                       onChange={(e) => setNewPromoterName(e.target.value)}
                       required
                       placeholder="Promoter name"
-                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                     />
                     <input
                       type="tel"
                       value={newPromoterPhone}
                       onChange={(e) => setNewPromoterPhone(e.target.value)}
                       placeholder="Phone"
-                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                     />
                     <input
                       type="email"
                       value={newPromoterEmail}
                       onChange={(e) => setNewPromoterEmail(e.target.value)}
                       placeholder="Email"
-                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                      className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                     />
                     {promoterError && <p className="text-red-400 text-xs">{promoterError}</p>}
                     <div className="flex flex-wrap gap-1.5">
                       <button
                         type="submit"
                         disabled={promoterLoading}
-                        className="px-3 py-1.5 text-sm rounded bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                        className="px-3 py-1.5 text-sm rounded bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
                       >
                         Save promoter
                       </button>

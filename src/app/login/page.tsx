@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { signIn, getProviders } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -55,7 +56,10 @@ function LoginForm() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+    <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-2 text-white">{"Tour Me Like It's Hot"}</h1>
         <p className="text-stage-muted text-center text-sm mb-8">Sign in to view your tour</p>
@@ -98,7 +102,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-dark font-semibold disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-accentFg font-semibold disabled:opacity-50"
           >
             {loading ? 'Signing in…' : 'Sign in with email'}
           </button>
@@ -110,7 +114,7 @@ function LoginForm() {
                 <div className="w-full border-t border-stage-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-stage-dark px-2 text-stage-muted">or</span>
+                <span className="bg-stage-surface px-2 text-stage-muted">or</span>
               </div>
             </div>
             <button
@@ -140,7 +144,10 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold text-center mb-2 text-white">{"Tour Me Like It's Hot"}</h1>
           <p className="text-stage-muted text-center">Loading…</p>

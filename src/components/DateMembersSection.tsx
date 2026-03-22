@@ -55,7 +55,7 @@ function AddPeoplePanel({
   const hasMore = notOnThisDate.length > 0;
   const grouped = groupMembersBySubgroup(notOnThisDate);
   return (
-    <div className="rounded-lg border border-stage-border bg-stage-dark/40 p-3">
+    <div className="rounded-lg border border-stage-border bg-stage-surface/40 p-3">
       <div className="flex items-center justify-between gap-2 mb-2">
         <p className="text-xs font-medium text-zinc-400">Add people to this date</p>
         {hasMore && (
@@ -73,7 +73,7 @@ function AddPeoplePanel({
         <div className="max-h-48 overflow-y-auto space-y-3">
           {grouped.map(({ key, label, members }) => (
             <div key={key ?? '__none__'}>
-              <p className="text-xs font-semibold text-zinc-500 sticky top-0 bg-stage-dark/95 py-1">{label}</p>
+              <p className="text-xs font-semibold text-zinc-500 sticky top-0 bg-stage-surface/95 py-1">{label}</p>
               <ul className="space-y-1">
                 {members.map((m) => (
                   <li key={m.id} className="flex items-center justify-between gap-2 py-1.5">
@@ -258,7 +258,7 @@ export function DateMembersSection({
           setSaveError('');
           setModalOpen(true);
         }}
-        className="shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium border border-stage-border text-stage-muted hover:text-white hover:border-stage-muted"
+        className="shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted"
       >
         View
       </button>
@@ -292,7 +292,7 @@ export function DateMembersSection({
           <button
             type="button"
             onClick={closeModal}
-            className="p-1.5 rounded-lg text-stage-muted hover:text-white hover:bg-stage-dark shrink-0"
+            className="p-1.5 rounded-lg text-stage-muted hover:text-stage-fg hover:bg-stage-surface shrink-0"
             aria-label="Close"
           >
             <X className="h-5 w-5" />

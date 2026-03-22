@@ -5,6 +5,8 @@ import { compare } from 'bcryptjs';
 import { prisma } from './prisma';
 
 export const authOptions: NextAuthOptions = {
+  // Explicit secret avoids volatile hashing in prod; must match .env NEXTAUTH_SECRET / AUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   session: { strategy: 'jwt', maxAge: 30 * 24 * 60 * 60 },
   pages: { signIn: '/login' },
   providers: [
@@ -61,15 +63,9 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         (session.user as { id?: string }).id = token.id as string;
-        let role = token.role as string | undefined;
-        if (typeof token.id === 'string') {
-          const dbUser = await prisma.user.findUnique({
-            where: { id: token.id },
-            select: { role: true },
-          });
-          if (dbUser) role = dbUser.role;
-        }
-        (session.user as { role?: string }).role = role;
+        // Use JWT role only — avoid a DB round-trip on every RSC request / navigation.
+        // Role changes in DB apply on next sign-in (or use "Update session" if you add it later).
+        (session.user as { role?: string }).role = token.role as string | undefined;
       }
       return session;
     },

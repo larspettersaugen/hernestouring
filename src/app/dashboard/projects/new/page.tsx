@@ -30,7 +30,7 @@ export default function NewProjectPage() {
     <div className="w-full max-w-2xl mx-auto p-6 lg:p-8 pb-8">
       <Link
         href="/dashboard/projects"
-        className="inline-flex items-center gap-2 text-stage-muted hover:text-white mb-6"
+        className="inline-flex items-center gap-2 text-stage-muted hover:text-stage-fg mb-6"
       >
         <ArrowLeft className="h-4 w-4" /> Artists
       </Link>
@@ -55,13 +55,13 @@ export default function NewProjectPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-dark font-semibold disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-accentFg font-semibold disabled:opacity-50"
           >
             {loading ? 'Creating…' : 'Create project'}
           </button>
           <Link
             href="/dashboard/projects"
-            className="py-2.5 px-4 rounded-lg border border-stage-border text-stage-muted hover:text-white"
+            className="py-2.5 px-4 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg"
           >
             Cancel
           </Link>

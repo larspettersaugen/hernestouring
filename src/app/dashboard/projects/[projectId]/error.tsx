@@ -18,7 +18,7 @@ export default function ProjectError({
     <div className="w-full max-w-6xl mx-auto p-6 lg:p-8">
       <Link
         href="/dashboard/projects"
-        className="inline-flex gap-2 text-stage-muted hover:text-white mb-4"
+        className="inline-flex gap-2 text-stage-muted hover:text-stage-fg mb-4"
       >
         ← Artists
       </Link>
@@ -30,13 +30,13 @@ export default function ProjectError({
         <div className="flex gap-3 justify-center">
           <button
             onClick={reset}
-            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium hover:bg-stage-accentHover"
+            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium hover:bg-stage-accentHover"
           >
             Try again
           </button>
           <Link
             href="/dashboard/projects"
-            className="px-4 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-white"
+            className="px-4 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg"
           >
             Back to Artists
           </Link>

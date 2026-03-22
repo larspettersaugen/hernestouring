@@ -7,8 +7,8 @@ import { TourDayView } from '@/components/TourDayView';
 import { DateInfo } from '@/components/DateInfo';
 import { DateNavTabs } from '@/components/DateNavTabs';
 import { PrintDaySheetButton } from '@/components/PrintDaySheetButton';
-import { canEdit, canAccessAdvance } from '@/lib/session';
-import { cleanupOrphanedTravelGroupMembers } from '@/lib/traveling-group';
+import { canEdit, canAccessAdvance, canEditAdvance } from '@/lib/session';
+import { isReadyForAdvanceComplete } from '@/lib/advance-complete';
 
 export default async function TourDateDetailPage({
   params,
@@ -28,30 +28,65 @@ export default async function TourDateDetailPage({
   const selectedDate = tour.dates.find((d) => d.id === dateId);
   if (!selectedDate) redirect(`/dashboard/tours/${tourId}`);
 
-  const schedule = await prisma.scheduleItem.findMany({
-    where: { tourDateId: dateId },
-    orderBy: { time: 'asc' },
-  });
-  const transportRaw = await prisma.transport.findMany({
-    where: { tourDateId: dateId },
-    include: {
-      passengers: {
-        include: {
-          travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
+  const userId = (session.user as { id?: string }).id;
+
+  const [schedule, transportRaw, hotelsRaw, flightsRaw, viewerPersonId, contacts, travelingGroup, advanceForComplete, taskRowsForComplete] =
+    await Promise.all([
+    prisma.scheduleItem.findMany({
+      where: { tourDateId: dateId },
+      orderBy: { time: 'asc' },
+    }),
+    prisma.transport.findMany({
+      where: { tourDateId: dateId },
+      include: {
+        passengers: {
+          include: {
+            travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
+          },
         },
       },
-    },
-  });
-  const hotelsRaw = await prisma.hotel.findMany({
-    where: { tourDateId: dateId },
-    include: {
-      guests: {
-        include: {
-          travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
+    }),
+    prisma.hotel.findMany({
+      where: { tourDateId: dateId },
+      include: {
+        guests: {
+          include: {
+            travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.flight.findMany({
+      where: { tourId },
+      orderBy: { departureTime: 'asc' },
+      include: {
+        passengers: {
+          include: {
+            travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
+          },
+        },
+      },
+    }),
+    userId
+      ? prisma.person.findFirst({
+          where: { userId },
+          select: { id: true, type: true },
+        })
+      : Promise.resolve(null),
+    prisma.contact.findMany({
+      where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.travelGroupMember.findMany({
+      where: { tourId },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.advance.findUnique({ where: { tourDateId: dateId } }),
+    prisma.tourDateTask.findMany({
+      where: { tourDateId: dateId },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    }),
+  ]);
   const hotels = hotelsRaw.map((h) => ({
     id: h.id,
     name: h.name,
@@ -86,21 +121,6 @@ export default async function TourDateDetailPage({
       personId: p.travelGroupMember.personId,
     })),
   }));
-  const flightsRaw = await prisma.flight.findMany({
-    where: { tourId },
-    orderBy: { departureTime: 'asc' },
-    include: {
-      passengers: {
-        include: {
-          travelGroupMember: { select: { id: true, name: true, role: true, personId: true } },
-        },
-      },
-    },
-  });
-  const viewerPersonId = await prisma.person.findFirst({
-    where: { userId: (session.user as { id?: string }).id },
-    select: { id: true, type: true },
-  });
   const viewerRole = (session.user as { role?: string }).role;
   const hasExtendedAccess = viewerRole === 'admin' || viewerRole === 'editor' || viewerRole === 'power_user';
   const isTourManager = viewerPersonId?.type === 'tour_manager';
@@ -138,17 +158,10 @@ export default async function TourDateDetailPage({
       : viewerPersonId
         ? transport.filter((t) => t.passengers.some((p) => p.personId === viewerPersonId.id))
         : [];
-  const contacts = await prisma.contact.findMany({
-    where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
-    orderBy: { name: 'asc' },
-  });
-  await cleanupOrphanedTravelGroupMembers(tourId);
-  const travelingGroup = await prisma.travelGroupMember.findMany({
-    where: { tourId },
-    orderBy: { name: 'asc' },
-  });
 
-  const allowEdit = canEdit((session.user as { role?: string }).role);
+  const sessionRole = (session.user as { role?: string }).role;
+  const allowEdit = canEdit(sessionRole);
+  const advanceReady = isReadyForAdvanceComplete(advanceForComplete, taskRowsForComplete);
 
   const currentIndex = tour.dates.findIndex((d) => d.id === dateId);
   const prevDate = currentIndex > 0 ? tour.dates[currentIndex - 1] : null;
@@ -159,7 +172,7 @@ export default async function TourDateDetailPage({
       <div className="flex items-center justify-between gap-4 mb-4 print:hidden">
         <Link
           href={`/dashboard/tours/${tourId}`}
-          className="inline-flex items-center gap-2 text-stage-muted hover:text-white"
+          className="inline-flex items-center gap-2 text-stage-muted hover:text-stage-fg"
         >
           <ArrowLeft className="h-4 w-4" /> {tour.name}
         </Link>
@@ -168,7 +181,7 @@ export default async function TourDateDetailPage({
             {prevDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${prevDate.id}`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 <ChevronLeft className="h-4 w-4" /> Previous
               </Link>
@@ -176,7 +189,7 @@ export default async function TourDateDetailPage({
             {nextDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${nextDate.id}`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 Next <ChevronRight className="h-4 w-4" />
               </Link>
@@ -198,7 +211,10 @@ export default async function TourDateDetailPage({
         promoterPhone={selectedDate.promoterPhone}
         promoterEmail={selectedDate.promoterEmail}
         allowEdit={allowEdit}
-        extraActions={(session.user as { role?: string }).role === 'viewer' ? undefined : <PrintDaySheetButton />}
+        extraActions={sessionRole === 'viewer' ? undefined : <PrintDaySheetButton />}
+        allowAdvanceComplete={canEditAdvance(sessionRole)}
+        advanceComplete={selectedDate.advanceComplete}
+        advanceReady={advanceReady}
         contacts={contacts}
         travelingGroup={travelingGroup.map((m) => ({
           id: m.id,
@@ -208,10 +224,10 @@ export default async function TourDateDetailPage({
           phone: m.phone,
           email: m.email,
         }))}
-        hideAllTourMessage={(session.user as { role?: string }).role === 'viewer'}
+        hideAllTourMessage={sessionRole === 'viewer'}
       />
 
-      <DateNavTabs tourId={tourId} dateId={dateId} active="day" allowAdvance={canAccessAdvance((session.user as { role?: string }).role)} />
+      <DateNavTabs tourId={tourId} dateId={dateId} active="day" allowAdvance={canAccessAdvance(sessionRole)} />
 
       <TourDayView
         tourId={tourId}
@@ -236,7 +252,7 @@ export default async function TourDateDetailPage({
           notes: m.notes,
         }))}
         allowEdit={allowEdit}
-        hideAllTourMessage={(session.user as { role?: string }).role === 'viewer'}
+        hideAllTourMessage={sessionRole === 'viewer'}
       />
     </div>
   );

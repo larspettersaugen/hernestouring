@@ -225,7 +225,7 @@ export function PeopleContent({
           <button
             type="button"
             onClick={() => copyBetaLink(betaJoinUrl)}
-            className="flex items-center justify-center gap-2 shrink-0 px-4 py-2 rounded-lg border border-stage-border text-sm text-white hover:bg-stage-dark"
+            className="flex items-center justify-center gap-2 shrink-0 px-4 py-2 rounded-lg border border-stage-border text-sm text-white hover:bg-stage-surface"
           >
             {betaLinkCopied ? <Check className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
             {betaLinkCopied ? 'Copied' : 'Copy link'}
@@ -252,7 +252,7 @@ export function PeopleContent({
               setError('');
               setInviteResult(null);
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium hover:bg-stage-accentHover"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium hover:bg-stage-accentHover"
           >
             <Plus className="h-4 w-4" /> Add person
           </button>
@@ -293,14 +293,14 @@ export function PeopleContent({
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Name"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
             <div>
               <label className="block text-xs text-stage-muted mb-1">Type</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
               >
                 {PERSON_TYPES.map((pt) => (
                   <option key={pt.value} value={pt.value}>{pt.label}</option>
@@ -313,7 +313,7 @@ export function PeopleContent({
                 type="date"
                 value={birthdate}
                 onChange={(e) => setBirthdate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
               />
             </div>
             <input
@@ -321,7 +321,7 @@ export function PeopleContent({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
             <input
               type="email"
@@ -329,14 +329,14 @@ export function PeopleContent({
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="Email (required for profile)"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
             <input
               type="text"
               value={streetName}
               onChange={(e) => setStreetName(e.target.value)}
               placeholder="Gateadresse"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
             <div className="grid grid-cols-2 gap-2">
               <input
@@ -344,13 +344,13 @@ export function PeopleContent({
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 placeholder="Postnummer"
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                 maxLength={4}
               />
               <select
                 value={county}
                 onChange={(e) => setCounty(e.target.value)}
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
               >
                 <option value="">Fylke</option>
                 {NORWEGIAN_COUNTIES.map((c) => (
@@ -363,7 +363,7 @@ export function PeopleContent({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             />
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -377,7 +377,7 @@ export function PeopleContent({
               </span>
             </label>
             {inviteResult && !inviteResult.personId && (
-              <div className="p-3 rounded-lg bg-stage-dark border border-stage-border space-y-2">
+              <div className="p-3 rounded-lg bg-stage-surface border border-stage-border space-y-2">
                 <p className="text-sm font-medium text-white flex items-center gap-2">
                   <Send className="h-4 w-4" /> Invite created – copy and share the link
                 </p>
@@ -385,7 +385,7 @@ export function PeopleContent({
                   <button
                     type="button"
                     onClick={() => copyInviteLink(inviteResult.inviteUrl)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-white text-sm"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-stage-fg text-sm"
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copied ? 'Copied' : 'Copy link'}
@@ -393,7 +393,7 @@ export function PeopleContent({
                   {phone && (
                     <a
                       href={`sms:${phone}?body=${encodeURIComponent(`You're invited to ${process.env.NEXT_PUBLIC_APP_NAME || "Tour Me Like It's Hot"}. Set up your account: ${inviteResult.inviteUrl}`)}`}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-white text-sm"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-stage-fg text-sm"
                     >
                       <Send className="h-4 w-4" /> Send via SMS
                     </a>
@@ -423,7 +423,7 @@ export function PeopleContent({
             {error && <p className="text-red-400 text-sm">{error}</p>}
             {!inviteResult && (
               <div className="flex gap-2">
-                <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50">
+                <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50">
                   Add
                 </button>
                 <button type="button" onClick={resetForm} className="px-4 py-2 rounded-lg border border-stage-border text-stage-muted">
@@ -458,12 +458,12 @@ export function PeopleContent({
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder="Name"
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     />
                     <select
                       value={type}
                       onChange={(e) => setType(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     >
                       {PERSON_TYPES.map((pt) => (
                         <option key={pt.value} value={pt.value}>{pt.label}</option>
@@ -475,7 +475,7 @@ export function PeopleContent({
                         type="date"
                         value={birthdate}
                         onChange={(e) => setBirthdate(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                        className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                       />
                     </div>
                     <input
@@ -483,21 +483,21 @@ export function PeopleContent({
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="Phone"
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email"
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     />
                     <input
                       type="text"
                       value={streetName}
                       onChange={(e) => setStreetName(e.target.value)}
                       placeholder="Gateadresse"
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <input
@@ -505,13 +505,13 @@ export function PeopleContent({
                         value={zipCode}
                         onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
                         placeholder="Postnummer"
-                        className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                        className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                         maxLength={4}
                       />
                       <select
                         value={county}
                         onChange={(e) => setCounty(e.target.value)}
-                        className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                        className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                       >
                         <option value="">Fylke</option>
                         {NORWEGIAN_COUNTIES.map((c) => (
@@ -524,7 +524,7 @@ export function PeopleContent({
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Notes"
-                      className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                      className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                     />
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -539,7 +539,7 @@ export function PeopleContent({
                     </label>
                     {error && <p className="text-red-400 text-sm">{error}</p>}
                     <div className="flex gap-2">
-                      <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50">
+                      <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50">
                         Save
                       </button>
                       <button type="button" onClick={resetForm} className="px-4 py-2 rounded-lg border border-stage-border text-stage-muted">
@@ -580,12 +580,12 @@ export function PeopleContent({
                       {p.notes && <p className="text-sm text-zinc-400 mt-1">{p.notes}</p>}
                       <div className="flex flex-wrap gap-1 mt-1">
                         {p.userId && (
-                          <span className="inline-block text-xs text-stage-muted bg-stage-dark px-2 py-0.5 rounded">
+                          <span className="inline-block text-xs text-stage-muted bg-stage-surface px-2 py-0.5 rounded">
                             Active profile
                           </span>
                         )}
                         {p.isPowerUser && (
-                          <span className="inline-block text-xs text-stage-accent bg-stage-dark px-2 py-0.5 rounded">
+                          <span className="inline-block text-xs text-stage-accent bg-stage-surface px-2 py-0.5 rounded">
                             Power user
                           </span>
                         )}
@@ -598,7 +598,7 @@ export function PeopleContent({
                             type="button"
                             onClick={() => handleRevokeInvite(p.id)}
                             disabled={loading}
-                            className="p-1.5 rounded text-stage-muted hover:text-amber-400 hover:bg-stage-dark disabled:opacity-50"
+                            className="p-1.5 rounded text-stage-muted hover:text-amber-400 hover:bg-stage-surface disabled:opacity-50"
                             aria-label="Revoke invite links"
                             title="Revoke outstanding invite links"
                           >
@@ -610,7 +610,7 @@ export function PeopleContent({
                             type="button"
                             onClick={() => handleInvite(p)}
                             disabled={loading}
-                            className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-dark disabled:opacity-50"
+                            className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-surface disabled:opacity-50"
                             aria-label={p.userId ? 'Resend invite' : 'Invite'}
                             title={p.userId ? 'Resend invite link' : 'Create invite link'}
                           >
@@ -621,7 +621,7 @@ export function PeopleContent({
                           type="button"
                           onClick={() => startEdit(p)}
                           disabled={loading}
-                          className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-dark disabled:opacity-50"
+                          className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-surface disabled:opacity-50"
                           aria-label="Edit"
                         >
                           <Pencil className="h-4 w-4" />
@@ -630,7 +630,7 @@ export function PeopleContent({
                     )}
                   </div>
                   {inviteResult?.personId === p.id && (
-                    <div className="mt-3 p-3 rounded-lg bg-stage-dark border border-stage-border space-y-2">
+                    <div className="mt-3 p-3 rounded-lg bg-stage-surface border border-stage-border space-y-2">
                       <p className="text-sm font-medium text-white flex items-center gap-2">
                         <Send className="h-4 w-4" /> Invite link – copy and share
                       </p>
@@ -638,7 +638,7 @@ export function PeopleContent({
                         <button
                           type="button"
                           onClick={() => copyInviteLink(inviteResult.inviteUrl)}
-                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-white text-sm"
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-stage-fg text-sm"
                         >
                           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                           {copied ? 'Copied' : 'Copy link'}
@@ -646,7 +646,7 @@ export function PeopleContent({
                         {p.phone && (
                           <a
                             href={`sms:${p.phone}?body=${encodeURIComponent(`You're invited to ${process.env.NEXT_PUBLIC_APP_NAME || "Tour Me Like It's Hot"}. Set up your account: ${inviteResult.inviteUrl}`)}`}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-white text-sm"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stage-card border border-stage-border text-stage-muted hover:text-stage-fg text-sm"
                           >
                             <Send className="h-4 w-4" /> Send via SMS
                           </a>

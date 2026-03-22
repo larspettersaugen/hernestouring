@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const TYPE_LABELS: Record<string, string> = {
   musician: 'Musician',
@@ -98,7 +99,10 @@ function BetaJoinForm() {
 
   if (status === 'loading') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
         <p className="text-stage-muted">Loading…</p>
       </main>
     );
@@ -106,7 +110,10 @@ function BetaJoinForm() {
 
   if (status === 'disabled') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-sm text-center">
           <h1 className="text-xl font-bold text-white mb-2">Beta signup unavailable</h1>
           <p className="text-stage-muted text-sm">
@@ -122,7 +129,10 @@ function BetaJoinForm() {
 
   if (status === 'invalid') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-sm text-center">
           <h1 className="text-xl font-bold text-white mb-2">Invalid beta link</h1>
           <p className="text-stage-muted text-sm">This link is wrong or no longer valid.</p>
@@ -135,7 +145,10 @@ function BetaJoinForm() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+    <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-2 text-white">Join beta</h1>
         <p className="text-stage-muted text-center text-sm mb-6">
@@ -225,7 +238,7 @@ function BetaJoinForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-dark font-semibold disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-accentFg font-semibold disabled:opacity-50"
           >
             {submitting ? 'Creating account…' : 'Create account'}
           </button>
@@ -245,7 +258,10 @@ export default function BetaJoinPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+        <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+          <div className="absolute top-4 right-4 z-10">
+            <ThemeToggle />
+          </div>
           <p className="text-stage-muted">Loading…</p>
         </main>
       }

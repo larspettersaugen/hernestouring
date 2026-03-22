@@ -120,7 +120,7 @@ function AddPassengerForm({
         <select
           value={memberId}
           onChange={(e) => setMemberId(e.target.value)}
-          className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm min-w-[140px]"
+          className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm min-w-[140px]"
         >
           <option value="">Select person</option>
           {subgroupKeys.map((key) => {
@@ -142,7 +142,7 @@ function AddPassengerForm({
           value={bookingRef}
           onChange={(e) => setBookingRef(e.target.value)}
           placeholder="Booking ref"
-          className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm w-24"
+          className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm w-24"
         />
       </div>
       <div className="pt-2 border-t border-stage-border space-y-3">
@@ -156,7 +156,7 @@ function AddPassengerForm({
                 setSubgroupToAdd(e.target.value || null);
                 setSubgroupIndividualRefs({});
               }}
-              className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm min-w-[120px]"
+              className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm min-w-[120px]"
             >
               <option value="">Select subgroup</option>
               {subgroupKeys.filter((k) => k != null).map((key) => (
@@ -170,7 +170,7 @@ function AddPassengerForm({
               value={subgroupBookingRef}
               onChange={(e) => setSubgroupBookingRef(e.target.value)}
               placeholder="Group booking ref (optional)"
-              className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
+              className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
             />
           </div>
           {subgroupMembers.length > 0 && (
@@ -185,7 +185,7 @@ function AddPassengerForm({
                       value={subgroupIndividualRefs[m.id] ?? ''}
                       onChange={(e) => setSubgroupMemberRef(m.id, e.target.value)}
                       placeholder={subgroupBookingRef || 'Booking ref'}
-                      className="flex-1 min-w-0 px-2 py-1 rounded bg-stage-dark border border-stage-border text-white text-xs"
+                      className="flex-1 min-w-0 px-2 py-1 rounded bg-stage-surface border border-stage-border text-white text-xs"
                     />
                   </div>
                 ))}
@@ -203,7 +203,7 @@ function AddPassengerForm({
           type="button"
           onClick={() => doAdd()}
           disabled={!canAdd}
-          className="px-2 py-1.5 rounded bg-stage-accent text-stage-dark text-sm font-medium disabled:opacity-50"
+          className="px-2 py-1.5 rounded bg-stage-accent text-stage-accentFg text-sm font-medium disabled:opacity-50"
         >
           Add
         </button>
@@ -552,7 +552,7 @@ export function FlightsSection({
                             value={editDepartureTime}
                             onChange={(e) => setEditDepartureTime(e.target.value)}
                             required
-                            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                           />
                         </div>
                         <div>
@@ -562,7 +562,7 @@ export function FlightsSection({
                             value={editArrivalTime}
                             onChange={(e) => setEditArrivalTime(e.target.value)}
                             required
-                            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                           />
                         </div>
                       </div>
@@ -573,7 +573,7 @@ export function FlightsSection({
                           onChange={(e) => setEditDepartureAirport(e.target.value)}
                           required
                           placeholder="From (e.g. OSL)"
-                          className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                          className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                         />
                         <input
                           type="text"
@@ -581,7 +581,7 @@ export function FlightsSection({
                           onChange={(e) => setEditArrivalAirport(e.target.value)}
                           required
                           placeholder="To (e.g. CDG)"
-                          className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                          className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                         />
                       </div>
                       <div className="flex gap-2">
@@ -590,13 +590,13 @@ export function FlightsSection({
                           value={editFlightNumber}
                           onChange={(e) => setEditFlightNumber(e.target.value)}
                           placeholder="Flight number (e.g. SK123)"
-                          className="flex-1 px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                          className="flex-1 px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                         />
                         <button
                           type="button"
                           onClick={handleEditLookup}
                           disabled={lookupLoading}
-                          className="px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-white disabled:opacity-50 flex items-center gap-1.5"
+                          className="px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg disabled:opacity-50 flex items-center gap-1.5"
                           title="Look up flight details"
                         >
                           <Search className="h-4 w-4" />
@@ -608,14 +608,14 @@ export function FlightsSection({
                         value={editNotes}
                         onChange={(e) => setEditNotes(e.target.value)}
                         placeholder="Notes"
-                        className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                        className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                       />
                       {error && <p className="text-red-400 text-sm">{error}</p>}
                       <div className="flex gap-2">
                         <button
                           type="submit"
                           disabled={loading}
-                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
                         >
                           Save
                         </button>
@@ -657,14 +657,14 @@ export function FlightsSection({
                               const ids = f.passengers.map((m) => m.id);
                               setSelectedPassengerIds(new Set(ids));
                             }}
-                            className="text-xs text-stage-muted hover:text-white"
+                            className="text-xs text-stage-muted hover:text-stage-fg"
                           >
                             Select all
                           </button>
                           <button
                             type="button"
                             onClick={() => setSelectedPassengerIds(new Set())}
-                            className="text-xs text-stage-muted hover:text-white"
+                            className="text-xs text-stage-muted hover:text-stage-fg"
                           >
                             Clear
                           </button>
@@ -703,7 +703,7 @@ export function FlightsSection({
                                   type="text"
                                   defaultValue={p.bookingRef || ''}
                                   placeholder="Booking ref"
-                                  className="flex-1 max-w-[120px] px-2 py-1 rounded bg-stage-dark border border-stage-border text-white text-xs"
+                                  className="flex-1 max-w-[120px] px-2 py-1 rounded bg-stage-surface border border-stage-border text-white text-xs"
                                   onBlur={(e) => {
                                     const v = e.target.value.trim();
                                     if (v !== (p.bookingRef || '')) handleUpdateBookingRef(f.id, p.id, v);
@@ -757,7 +757,7 @@ export function FlightsSection({
                   value={departureTime}
                   onChange={(e) => setDepartureTime(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                 />
               </div>
               <div>
@@ -767,7 +767,7 @@ export function FlightsSection({
                   value={arrivalTime}
                   onChange={(e) => setArrivalTime(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                 />
               </div>
             </div>
@@ -778,7 +778,7 @@ export function FlightsSection({
                 onChange={(e) => setDepartureAirport(e.target.value)}
                 required
                 placeholder="From (e.g. OSL)"
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="text"
@@ -786,7 +786,7 @@ export function FlightsSection({
                 onChange={(e) => setArrivalAirport(e.target.value)}
                 required
                 placeholder="To (e.g. CDG)"
-                className="px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
             </div>
             <div className="flex gap-2">
@@ -795,13 +795,13 @@ export function FlightsSection({
                 value={flightNumber}
                 onChange={(e) => setFlightNumber(e.target.value)}
                 placeholder="Flight number (e.g. SK123)"
-                className="flex-1 px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="flex-1 px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <button
                 type="button"
                 onClick={handleLookup}
                 disabled={lookupLoading}
-                className="px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-white disabled:opacity-50 flex items-center gap-1.5"
+                className="px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg disabled:opacity-50 flex items-center gap-1.5"
                 title="Look up flight details"
               >
                 <Search className="h-4 w-4" />
@@ -813,7 +813,7 @@ export function FlightsSection({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             {allowEdit && travelingGroup.length > 0 && (
               <div className="border-t border-stage-border pt-4 space-y-3">
@@ -854,7 +854,7 @@ export function FlightsSection({
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
               >
                 Add flight
               </button>

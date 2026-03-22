@@ -4,10 +4,13 @@ import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
 import { format } from 'date-fns';
 import { ArrowLeft, Calendar, Pencil, Plus, Users } from 'lucide-react';
+import { AdvanceCompleteGreenLight } from '@/components/AdvanceCompleteGreenLight';
 import { ShowStatusBadge } from '@/components/ShowStatusBadge';
 import { getStatusCardClasses } from '@/lib/show-status';
 import { getDateKindLabel } from '@/lib/date-kind';
-import { canEdit } from '@/lib/session';
+import { canEdit, canEditAdvance } from '@/lib/session';
+import { isReadyForAdvanceComplete } from '@/lib/advance-complete';
+import { TourAdvanceCompleteBar } from '@/components/TourAdvanceCompleteBar';
 import { cleanupOrphanedTravelGroupMembers } from '@/lib/traveling-group';
 import { TravelingGroupSection } from '@/components/TravelingGroupSection';
 
@@ -24,7 +27,13 @@ export default async function TourDatesPage({
     where: { id: tourId },
     include: {
       project: { select: { id: true, name: true } },
-      dates: { orderBy: { date: 'asc' } },
+      dates: {
+        orderBy: { date: 'asc' },
+        include: {
+          advance: true,
+          tasks: { select: { done: true } },
+        },
+      },
     },
   });
   if (!tour) redirect('/dashboard/tours');
@@ -35,7 +44,21 @@ export default async function TourDatesPage({
     orderBy: { name: 'asc' },
   });
 
-  const allowEdit = canEdit((session.user as { role?: string }).role);
+  const role = (session.user as { role?: string }).role;
+  const allowEdit = canEdit(role);
+  /** Admin, editor & power_user — same as advance checklist / API. */
+  const allowAdvanceCompleteBar = canEditAdvance(role) && tour.dates.length > 0;
+
+  const advanceCompleteDateOptions = tour.dates.map((d) => ({
+    id: d.id,
+    label: `${d.venueName}, ${d.city} · ${
+      d.endDate
+        ? `${format(new Date(d.date), 'MMM d')}–${format(new Date(d.endDate), 'MMM d')}`
+        : format(new Date(d.date), 'MMM d, yyyy')
+    }`,
+    advanceComplete: d.advanceComplete,
+    ready: isReadyForAdvanceComplete(d.advance, d.tasks),
+  }));
 
   const projectName = tour.project?.name ?? 'Project';
 
@@ -43,7 +66,7 @@ export default async function TourDatesPage({
     <div className="w-full max-w-6xl mx-auto p-6 lg:p-8 pb-8">
       <Link
         href={tour.projectId ? `/dashboard/projects/${tour.projectId}` : '/dashboard/projects'}
-        className="inline-flex items-center gap-2 text-stage-muted hover:text-white mb-4"
+        className="inline-flex items-center gap-2 text-stage-muted hover:text-stage-fg mb-4"
       >
         <ArrowLeft className="h-4 w-4" /> {projectName}
       </Link>
@@ -62,14 +85,19 @@ export default async function TourDatesPage({
                   : null}
           </p>
         </div>
-        {allowEdit && (
-          <Link
-            href={`/dashboard/tours/${tourId}/edit`}
-            className="shrink-0 flex items-center gap-2 py-2 px-3 rounded-lg border border-stage-border text-stage-muted hover:border-stage-accent/50 hover:text-stage-accent transition"
-          >
-            <Pencil className="h-4 w-4" /> Edit tour
-          </Link>
-        )}
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-end shrink-0">
+          {allowEdit && (
+            <Link
+              href={`/dashboard/tours/${tourId}/edit`}
+              className="shrink-0 flex items-center justify-center gap-2 py-2 px-3 rounded-lg border border-stage-border text-stage-muted hover:border-stage-accent/50 hover:text-stage-accent transition sm:self-start"
+            >
+              <Pencil className="h-4 w-4" /> Edit tour
+            </Link>
+          )}
+          {allowAdvanceCompleteBar && (
+            <TourAdvanceCompleteBar tourId={tourId} dates={advanceCompleteDateOptions} />
+          )}
+        </div>
       </div>
 
       <section className="mb-8">
@@ -122,7 +150,15 @@ export default async function TourDatesPage({
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-medium text-white">{date.venueName}, {date.city}</p>
-                      <span className="text-xs text-stage-muted bg-stage-dark px-1.5 py-0.5 rounded">
+                      {date.advanceComplete ? (
+                        <span className="flex items-center gap-1.5 shrink-0" title="Advance complete — green light on">
+                          <AdvanceCompleteGreenLight />
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-400/90 hidden sm:inline">
+                            OK
+                          </span>
+                        </span>
+                      ) : null}
+                      <span className="text-xs text-stage-muted bg-stage-surface px-1.5 py-0.5 rounded">
                         {getDateKindLabel(date.kind)}
                       </span>
                       <ShowStatusBadge status={date.status} />

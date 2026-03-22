@@ -65,7 +65,7 @@ export default async function PeoplePage({
 
   let betaJoinUrl: string | null = null;
   if (allowEdit && isBetaJoinEnabled()) {
-    const h = headers();
+    const h = await headers();
     const base = getPublicAppBaseUrl((name) => h.get(name));
     const secret = getBetaJoinSecret()!;
     betaJoinUrl = `${base}/join/${encodeURIComponent(secret)}`;

@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
  * Removes tour members that are not in the People database.
  * Deletes TravelGroupMembers where personId is null or the Person no longer exists.
  * Cascades to TourDateMember, FlightPassenger, TransportPassenger, HotelGuest.
+ *
+ * Call from the tour overview page and traveling-group API — not on every date subpage (latency).
  */
 export async function cleanupOrphanedTravelGroupMembers(tourId: string): Promise<number> {
   const members = await prisma.travelGroupMember.findMany({

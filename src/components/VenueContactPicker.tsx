@@ -55,7 +55,7 @@ export function VenueContactPicker({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search by name..."
-          className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+          className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           autoFocus
         />
       </div>
@@ -70,7 +70,7 @@ export function VenueContactPicker({
               <button
                 type="button"
                 onClick={() => onSelect(c)}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-stage-dark text-white text-sm"
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-stage-surface text-white text-sm"
               >
                 <span className="font-medium">{c.name}</span>
                 {c.role && <span className="text-stage-muted ml-1.5">({c.role})</span>}
@@ -83,7 +83,7 @@ export function VenueContactPicker({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 text-sm rounded border border-stage-border text-stage-muted hover:text-white"
+          className="px-3 py-1.5 text-sm rounded border border-stage-border text-stage-muted hover:text-stage-fg"
         >
           Cancel
         </button>

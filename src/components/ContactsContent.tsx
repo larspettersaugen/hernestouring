@@ -122,7 +122,7 @@ export function ContactsContent({
           <button
             type="button"
             onClick={() => setAdding(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium hover:opacity-90"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium hover:opacity-90"
           >
             <Plus className="h-4 w-4" /> Add contact
           </button>
@@ -143,42 +143,42 @@ export function ContactsContent({
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="Name"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
           <input
             type="text"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             placeholder="Role (e.g. venue, promoter)"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Phone"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
           <input
             type="text"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Notes"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
             >
               {loading ? 'Saving…' : editing ? 'Save' : 'Add'}
             </button>
@@ -233,7 +233,7 @@ export function ContactsContent({
                   <button
                     type="button"
                     onClick={() => startEdit(c)}
-                    className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-dark shrink-0"
+                    className="p-1.5 rounded text-stage-muted hover:text-stage-accent hover:bg-stage-surface shrink-0"
                     aria-label="Edit"
                   >
                     <Pencil className="h-4 w-4" />

@@ -37,7 +37,7 @@ export function DatePicker({
               href={`/dashboard/tours/${tourId}/dates/${d.id}`}
               className={`
                 flex-shrink-0 px-4 py-2.5 rounded-lg border text-sm whitespace-nowrap
-                ${isSelected ? 'bg-stage-accent border-stage-accent text-stage-dark font-medium' : 'bg-stage-card border-stage-border text-stage-muted hover:text-white hover:border-stage-muted'}
+                ${isSelected ? 'bg-stage-accent border-stage-accent text-stage-accentFg font-medium' : 'bg-stage-card border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted'}
               `}
             >
               {format(new Date(d.date), 'EEE M/d')} · {d.city}

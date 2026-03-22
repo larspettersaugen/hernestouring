@@ -3,11 +3,21 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Calendar, PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { AdvanceCompleteGreenLight } from '@/components/AdvanceCompleteGreenLight';
 import { format } from 'date-fns';
 import { useTourDatesSidebar } from '@/contexts/TourDatesSidebarContext';
 import { getDateKindLabel } from '@/lib/date-kind';
 
-type TourDate = { id: string; venueName: string; city: string; date: string; endDate?: string | null; kind?: string | null; address: string | null };
+type TourDate = {
+  id: string;
+  venueName: string;
+  city: string;
+  date: string;
+  endDate?: string | null;
+  kind?: string | null;
+  address: string | null;
+  advanceComplete?: boolean;
+};
 
 export function TourDatesSidebar({
   tourId,
@@ -54,17 +64,30 @@ export function TourDatesSidebar({
                 <Link
                   key={date.id}
                   href={href}
-                  title={collapsed ? `${getDateKindLabel(date.kind)}: ${date.venueName}, ${date.city}` : undefined}
+                  title={
+                    collapsed
+                      ? `${date.advanceComplete ? 'Advance complete (green light) · ' : ''}${getDateKindLabel(date.kind)}: ${date.venueName}, ${date.city}`
+                      : undefined
+                  }
                   className={`flex items-center rounded-lg text-sm transition shrink-0 ${
                     collapsed ? 'p-2.5 justify-center' : 'gap-3 px-3 py-2.5'
                   } ${
-                    isActive ? 'bg-stage-dark text-white' : 'text-stage-muted hover:text-white hover:bg-stage-dark/50'
+                    isActive ? 'bg-stage-surface text-white' : 'text-stage-muted hover:text-stage-fg hover:bg-stage-surface/50'
                   }`}
                 >
                   {!collapsed ? (
                     <>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium truncate">{date.venueName}, {date.city}</p>
+                        <p className="font-medium truncate flex items-center gap-1.5 min-w-0">
+                          <span className="truncate">
+                            {date.venueName}, {date.city}
+                          </span>
+                          {date.advanceComplete ? (
+                            <span className="shrink-0 pt-0.5" title="Advance complete">
+                              <AdvanceCompleteGreenLight />
+                            </span>
+                          ) : null}
+                        </p>
                         <p className="text-xs text-stage-muted truncate">
                           {getDateKindLabel(date.kind)} · {date.endDate
                             ? `${format(new Date(date.date), 'EEE MMM d')} – ${format(new Date(date.endDate), 'EEE MMM d')}`
@@ -74,8 +97,11 @@ export function TourDatesSidebar({
                       {isActive && <span className="text-stage-accent">•</span>}
                     </>
                   ) : (
-                    <span className="text-xs font-medium w-6 text-center">
-                      {format(new Date(date.date), 'd')}
+                    <span className="text-xs font-medium w-6 text-center flex flex-col items-center gap-0.5">
+                      <span>{format(new Date(date.date), 'd')}</span>
+                      {date.advanceComplete ? (
+                        <AdvanceCompleteGreenLight className="scale-90" label="Advance complete" />
+                      ) : null}
                     </span>
                   )}
                 </Link>
@@ -85,7 +111,7 @@ export function TourDatesSidebar({
         </aside>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -left-4 bottom-8 z-10 h-10 w-10 flex items-center justify-center rounded-full border-2 border-stage-border bg-stage-card text-stage-muted hover:text-stage-accent hover:border-stage-accent hover:bg-stage-dark shadow-lg"
+          className="absolute -left-4 bottom-8 z-10 h-10 w-10 flex items-center justify-center rounded-full border-2 border-stage-border bg-stage-card text-stage-muted hover:text-stage-accent hover:border-stage-accent hover:bg-stage-surface shadow-lg"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <PanelRightOpen className="h-5 w-5" /> : <PanelRightClose className="h-5 w-5" />}

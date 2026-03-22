@@ -7,7 +7,7 @@ import { DateInfo } from '@/components/DateInfo';
 import { DateNavTabs } from '@/components/DateNavTabs';
 import { AdvanceContent } from '@/components/AdvanceContent';
 import { canEdit, canEditAdvance, canAccessAdvance } from '@/lib/session';
-import { cleanupOrphanedTravelGroupMembers } from '@/lib/traveling-group';
+import { isReadyForAdvanceComplete } from '@/lib/advance-complete';
 
 export default async function AdvancePage({
   params,
@@ -18,6 +18,10 @@ export default async function AdvancePage({
   if (!session?.user) redirect('/login');
   const { tourId, dateId } = await params;
 
+  const sessionRole = (session.user as { role?: string }).role;
+  const allowAdvance = canAccessAdvance(sessionRole);
+  if (!allowAdvance) redirect(`/dashboard/tours/${tourId}/dates/${dateId}`);
+
   const tour = await prisma.tour.findUnique({
     where: { id: tourId },
     include: { dates: { orderBy: { date: 'asc' } } },
@@ -27,30 +31,31 @@ export default async function AdvancePage({
   const selectedDate = tour.dates.find((d) => d.id === dateId);
   if (!selectedDate) redirect(`/dashboard/tours/${tourId}`);
 
-  const advance = await prisma.advance.findUnique({
-    where: { tourDateId: dateId },
-  });
+  const [advance, advanceFiles, contacts, travelingGroup, taskRowsForComplete] = await Promise.all([
+    prisma.advance.findUnique({
+      where: { tourDateId: dateId },
+    }),
+    prisma.advanceFile.findMany({
+      where: { tourDateId: dateId },
+      orderBy: { createdAt: 'asc' },
+    }),
+    prisma.contact.findMany({
+      where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.travelGroupMember.findMany({
+      where: { tourId },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.tourDateTask.findMany({
+      where: { tourDateId: dateId },
+      select: { done: true },
+    }),
+  ]);
+  const advanceReady = isReadyForAdvanceComplete(advance, taskRowsForComplete);
 
-  const advanceFiles = await prisma.advanceFile.findMany({
-    where: { tourDateId: dateId },
-    orderBy: { createdAt: 'asc' },
-  });
-
-  const contacts = await prisma.contact.findMany({
-    where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
-    orderBy: { name: 'asc' },
-  });
-
-  await cleanupOrphanedTravelGroupMembers(tourId);
-  const travelingGroup = await prisma.travelGroupMember.findMany({
-    where: { tourId },
-    orderBy: { name: 'asc' },
-  });
-
-  const allowEdit = canEdit((session.user as { role?: string }).role);
-  const allowAdvanceEdit = canEditAdvance((session.user as { role?: string }).role);
-  const allowAdvance = canAccessAdvance((session.user as { role?: string }).role);
-  if (!allowAdvance) redirect(`/dashboard/tours/${tourId}/dates/${dateId}`);
+  const allowEdit = canEdit(sessionRole);
+  const allowAdvanceEdit = canEditAdvance(sessionRole);
 
   const currentIndex = tour.dates.findIndex((d) => d.id === dateId);
   const prevDate = currentIndex > 0 ? tour.dates[currentIndex - 1] : null;
@@ -85,7 +90,7 @@ export default async function AdvancePage({
       <div className="flex items-center justify-between gap-4 mb-4 print:hidden">
         <Link
           href={`/dashboard/tours/${tourId}`}
-          className="inline-flex items-center gap-2 text-stage-muted hover:text-white"
+          className="inline-flex items-center gap-2 text-stage-muted hover:text-stage-fg"
         >
           <ArrowLeft className="h-4 w-4" /> {tour.name}
         </Link>
@@ -94,7 +99,7 @@ export default async function AdvancePage({
             {prevDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${prevDate.id}/advance`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 <ChevronLeft className="h-4 w-4" /> Previous
               </Link>
@@ -102,7 +107,7 @@ export default async function AdvancePage({
             {nextDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${nextDate.id}/advance`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 Next <ChevronRight className="h-4 w-4" />
               </Link>
@@ -125,6 +130,9 @@ export default async function AdvancePage({
         promoterPhone={selectedDate.promoterPhone}
         promoterEmail={selectedDate.promoterEmail}
         allowEdit={allowEdit}
+        allowAdvanceComplete={allowAdvanceEdit}
+        advanceComplete={selectedDate.advanceComplete}
+        advanceReady={advanceReady}
         contacts={contacts}
         travelingGroup={travelingGroup.map((m) => ({
           id: m.id,
@@ -134,7 +142,7 @@ export default async function AdvancePage({
           phone: m.phone,
           email: m.email,
         }))}
-        hideAllTourMessage={(session.user as { role?: string }).role === 'viewer'}
+        hideAllTourMessage={sessionRole === 'viewer'}
       />
 
       <DateNavTabs tourId={tourId} dateId={dateId} active="advance" allowAdvance={allowAdvance} />

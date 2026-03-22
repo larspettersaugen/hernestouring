@@ -51,7 +51,7 @@ function AddPassengerForm({
         value={memberId}
         onChange={(e) => setMemberId(e.target.value)}
         required
-        className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm min-w-[140px]"
+        className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm min-w-[140px]"
       >
         <option value="">Select person</option>
         {available.map((m) => (
@@ -65,7 +65,7 @@ function AddPassengerForm({
         <button
           type="submit"
           disabled={loading || !memberId}
-          className="px-2 py-1.5 rounded bg-stage-accent text-stage-dark text-sm font-medium disabled:opacity-50"
+          className="px-2 py-1.5 rounded bg-stage-accent text-stage-accentFg text-sm font-medium disabled:opacity-50"
         >
           Add
         </button>
@@ -272,7 +272,7 @@ export function TransportSection({
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
                 >
                   <option value="pickup">Pickup</option>
                   <option value="bus">Bus</option>
@@ -288,14 +288,14 @@ export function TransportSection({
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                     required
-                    className="w-full min-w-[100px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
+                    className="w-full min-w-[100px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
                   />
                   <label className="flex items-center gap-1.5 text-sm text-stage-muted whitespace-nowrap cursor-pointer">
                     <input
                       type="checkbox"
                       checked={dayAfter}
                       onChange={(e) => setDayAfter(e.target.checked)}
-                      className="rounded border-stage-border bg-stage-dark text-stage-accent"
+                      className="rounded border-stage-border bg-stage-surface text-stage-accent"
                     />
                     Day after
                   </label>
@@ -307,7 +307,7 @@ export function TransportSection({
               value={driver}
               onChange={(e) => setDriver(e.target.value)}
               placeholder="Driver"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <div className="grid grid-cols-2 gap-2">
               <input
@@ -315,14 +315,14 @@ export function TransportSection({
                 value={driverPhone}
                 onChange={(e) => setDriverPhone(e.target.value)}
                 placeholder="Driver phone"
-                className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="email"
                 value={driverEmail}
                 onChange={(e) => setDriverEmail(e.target.value)}
                 placeholder="Driver email"
-                className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
             </div>
             <input
@@ -330,21 +330,21 @@ export function TransportSection({
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder="Company"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             {error && <p className="text-red-400 text-sm">{error}</p>}
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
               >
                 Add
               </button>

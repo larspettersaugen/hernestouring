@@ -3,15 +3,17 @@
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { Calendar, LogOut, Menu, Users, UserCircle, LayoutDashboard, FolderOpen, Contact, PanelLeftClose, PanelLeftOpen, FileStack, MapPin } from 'lucide-react';
+import { Calendar, LogOut, Menu, Users, UserCircle, LayoutDashboard, FolderOpen, Contact, PanelLeftClose, PanelLeftOpen, FileStack, MapPin, Building2 } from 'lucide-react';
 import { useState } from 'react';
 import type { User } from 'next-auth';
 import { useTourDatesSidebar } from '@/contexts/TourDatesSidebarContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const allNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/projects', label: 'Artists', icon: FolderOpen },
   { href: '/dashboard/tours', label: 'Tours', icon: MapPin },
+  { href: '/dashboard/venues', label: 'Venues', icon: Building2 },
   { href: '/dashboard/people', label: 'People', icon: Users },
   { href: '/dashboard/contacts', label: 'Contacts', icon: Contact },
   { href: '/dashboard/templates', label: 'Templates', icon: FileStack },
@@ -50,7 +52,7 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
               className={`flex items-center rounded-lg text-sm transition shrink-0 ${
                 sidebarCollapsed ? 'p-2.5 justify-center' : 'gap-3 px-3 py-2.5'
               } ${
-                isActive ? 'bg-stage-dark text-white' : 'text-stage-muted hover:text-white hover:bg-stage-dark/50'
+                isActive ? 'bg-stage-surface text-white' : 'text-stage-muted hover:text-stage-fg hover:bg-stage-surface/50'
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -60,6 +62,9 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
         })}
       </nav>
       <div className={`shrink-0 border-t border-stage-border flex flex-col bg-stage-card ${sidebarCollapsed ? 'p-2 items-center gap-1' : 'p-3 space-y-1'}`}>
+        <div className={`flex items-center ${sidebarCollapsed ? 'justify-center pb-1' : 'px-3 pb-2'}`}>
+          <ThemeToggle />
+        </div>
         {!sidebarCollapsed && (
           <>
             <div className="px-3 py-2 text-xs text-stage-muted truncate">{user.email}</div>
@@ -69,7 +74,7 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
         <Link
           href="/dashboard/profile"
           title={sidebarCollapsed ? 'My profile' : undefined}
-          className={`flex items-center rounded-lg text-sm text-stage-muted hover:text-white hover:bg-stage-dark/50 ${
+          className={`flex items-center rounded-lg text-sm text-stage-muted hover:text-stage-fg hover:bg-stage-surface/50 ${
             sidebarCollapsed ? 'p-2 justify-center' : 'gap-3 px-3 py-2'
           }`}
         >
@@ -101,7 +106,7 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
         </aside>
         <button
           onClick={() => setSidebarCollapsed((c) => !c)}
-          className="absolute -right-4 bottom-8 z-10 h-10 w-10 flex items-center justify-center rounded-full border-2 border-stage-border bg-stage-card text-stage-muted hover:text-stage-accent hover:border-stage-accent hover:bg-stage-dark shadow-lg"
+          className="absolute -right-4 bottom-8 z-10 h-10 w-10 flex items-center justify-center rounded-full border-2 border-stage-border bg-stage-card text-stage-muted hover:text-stage-accent hover:border-stage-accent hover:bg-stage-surface shadow-lg"
           aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {sidebarCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
@@ -115,12 +120,13 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
         }`}
       >
         {/* Mobile header - visible below lg only. Never show with sidebar. */}
-        <header className="flex lg:hidden shrink-0 flex-row items-center justify-between h-14 px-4 border-b border-stage-border bg-stage-dark min-h-[3.5rem]">
-          <Link href="/dashboard" className="flex items-center gap-2 text-white font-semibold">
+        <header className="flex lg:hidden shrink-0 flex-row items-center justify-between h-14 px-4 border-b border-stage-border bg-stage-surface min-h-[3.5rem]">
+          <Link href="/dashboard" className="flex items-center gap-2 text-white font-semibold min-w-0">
             <Calendar className="h-6 w-6 shrink-0 text-stage-accent" />
-            <span>{"Tour Me Like It's Hot"}</span>
+            <span className="truncate">{"Tour Me Like It's Hot"}</span>
           </Link>
-          <div className="relative">
+          <div className="relative flex items-center gap-1">
+            <ThemeToggle />
             <button
               onClick={() => setMenuOpen((o) => !o)}
               className="p-2 rounded-lg hover:bg-stage-card text-white"
@@ -138,16 +144,16 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
                       key={href}
                       href={href}
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-stage-dark"
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-stage-surface"
                     >
                       <Icon className="h-4 w-4 shrink-0" /> {label}
                     </Link>
                   ))}
                   <div className="border-t border-stage-border my-1" />
-                  <Link href="/dashboard/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-stage-dark">
+                  <Link href="/dashboard/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-stage-surface">
                     <UserCircle className="h-4 w-4 shrink-0" /> My profile
                   </Link>
-                  <button onClick={() => signOut({ callbackUrl: '/login' })} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-red-400 hover:bg-stage-dark">
+                  <button onClick={() => signOut({ callbackUrl: '/login' })} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-red-400 hover:bg-stage-surface">
                     <LogOut className="h-4 w-4 shrink-0" /> Sign out
                   </button>
                 </div>
@@ -157,7 +163,7 @@ export function DashboardLayoutClient({ user, children }: { user: User; children
         </header>
 
         <main
-          className={`flex-1 min-h-0 overflow-auto bg-stage-dark text-white transition-[margin] duration-200 ${
+          className={`flex-1 min-h-0 overflow-auto bg-stage-surface text-white transition-[margin] duration-200 ${
             isTourPage ? (rightSidebarCollapsed ? 'lg:mr-[4.5rem]' : 'lg:mr-64') : ''
           }`}
         >

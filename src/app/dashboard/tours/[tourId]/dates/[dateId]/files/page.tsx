@@ -6,8 +6,8 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { DateInfo } from '@/components/DateInfo';
 import { DateNavTabs } from '@/components/DateNavTabs';
 import { DayFilesSection } from '@/components/DayFilesSection';
-import { canEdit, canAccessAdvance } from '@/lib/session';
-import { cleanupOrphanedTravelGroupMembers } from '@/lib/traveling-group';
+import { canEdit, canAccessAdvance, canEditAdvance } from '@/lib/session';
+import { isReadyForAdvanceComplete } from '@/lib/advance-complete';
 
 export default async function DateFilesPage({
   params,
@@ -27,29 +27,35 @@ export default async function DateFilesPage({
   const selectedDate = tour.dates.find((d) => d.id === dateId);
   if (!selectedDate) redirect(`/dashboard/tours/${tourId}`);
 
-  const advanceFiles = await prisma.advanceFile.findMany({
-    where: { tourDateId: dateId },
-    orderBy: { createdAt: 'asc' },
-  });
+  const [advanceFiles, contacts, travelingGroup, advanceForComplete, taskRowsForComplete] = await Promise.all([
+    prisma.advanceFile.findMany({
+      where: { tourDateId: dateId },
+      orderBy: { createdAt: 'asc' },
+    }),
+    prisma.contact.findMany({
+      where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.travelGroupMember.findMany({
+      where: { tourId },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.advance.findUnique({ where: { tourDateId: dateId } }),
+    prisma.tourDateTask.findMany({
+      where: { tourDateId: dateId },
+      select: { done: true },
+    }),
+  ]);
 
-  const contacts = await prisma.contact.findMany({
-    where: { tourId, OR: [{ tourDateId: null }, { tourDateId: dateId }] },
-    orderBy: { name: 'asc' },
-  });
-
-  await cleanupOrphanedTravelGroupMembers(tourId);
-  const travelingGroup = await prisma.travelGroupMember.findMany({
-    where: { tourId },
-    orderBy: { name: 'asc' },
-  });
-
-  const allowEdit = canEdit((session.user as { role?: string }).role);
+  const sessionRole = (session.user as { role?: string }).role;
+  const allowEdit = canEdit(sessionRole);
+  const advanceReady = isReadyForAdvanceComplete(advanceForComplete, taskRowsForComplete);
 
   const currentIndex = tour.dates.findIndex((d) => d.id === dateId);
   const prevDate = currentIndex > 0 ? tour.dates[currentIndex - 1] : null;
   const nextDate = currentIndex >= 0 && currentIndex < tour.dates.length - 1 ? tour.dates[currentIndex + 1] : null;
 
-  const allowAdvanceAccess = canAccessAdvance((session.user as { role?: string }).role);
+  const allowAdvanceAccess = canAccessAdvance(sessionRole);
   const files = allowAdvanceAccess
     ? advanceFiles.map((f) => ({
         id: f.id,
@@ -66,7 +72,7 @@ export default async function DateFilesPage({
       <div className="flex items-center justify-between gap-4 mb-4 print:hidden">
         <Link
           href={`/dashboard/tours/${tourId}`}
-          className="inline-flex items-center gap-2 text-stage-muted hover:text-white"
+          className="inline-flex items-center gap-2 text-stage-muted hover:text-stage-fg"
         >
           <ArrowLeft className="h-4 w-4" /> {tour.name}
         </Link>
@@ -75,7 +81,7 @@ export default async function DateFilesPage({
             {prevDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${prevDate.id}/files`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 <ChevronLeft className="h-4 w-4" /> Previous
               </Link>
@@ -83,7 +89,7 @@ export default async function DateFilesPage({
             {nextDate && (
               <Link
                 href={`/dashboard/tours/${tourId}/dates/${nextDate.id}/files`}
-                className="flex items-center gap-1.5 text-stage-muted hover:text-white transition text-sm"
+                className="flex items-center gap-1.5 text-stage-muted hover:text-stage-fg transition text-sm"
               >
                 Next <ChevronRight className="h-4 w-4" />
               </Link>
@@ -106,6 +112,9 @@ export default async function DateFilesPage({
         promoterPhone={selectedDate.promoterPhone}
         promoterEmail={selectedDate.promoterEmail}
         allowEdit={allowEdit}
+        allowAdvanceComplete={canEditAdvance(sessionRole)}
+        advanceComplete={selectedDate.advanceComplete}
+        advanceReady={advanceReady}
         contacts={contacts}
         travelingGroup={travelingGroup.map((m) => ({
           id: m.id,
@@ -115,10 +124,10 @@ export default async function DateFilesPage({
           phone: m.phone,
           email: m.email,
         }))}
-        hideAllTourMessage={(session.user as { role?: string }).role === 'viewer'}
+        hideAllTourMessage={sessionRole === 'viewer'}
       />
 
-      <DateNavTabs tourId={tourId} dateId={dateId} active="files" allowAdvance={canAccessAdvance((session.user as { role?: string }).role)} />
+      <DateNavTabs tourId={tourId} dateId={dateId} active="files" allowAdvance={allowAdvanceAccess} />
 
       <div className="rounded-xl bg-stage-card border border-stage-border p-6">
         <DayFilesSection

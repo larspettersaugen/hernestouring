@@ -66,6 +66,11 @@ export const api = {
       fetchApi<{ ok: boolean }>(`/tours/${tourId}/dates/${dateId}`, { method: 'PATCH', body: JSON.stringify(body) }),
     delete: (tourId: string, dateId: string) =>
       fetchApi<{ ok: boolean }>(`/tours/${tourId}/dates/${dateId}`, { method: 'DELETE' }),
+    setAdvanceComplete: (tourId: string, dateId: string, complete: boolean) =>
+      fetchApi<{ ok: boolean }>(`/tours/${tourId}/dates/${dateId}/advance-complete`, {
+        method: 'POST',
+        body: JSON.stringify({ complete }),
+      }),
     dateMembers: {
       list: (tourId: string, dateId: string) =>
         fetchApi<{ memberIds: string[] }>(`/tours/${tourId}/dates/${dateId}/date-members`),
@@ -126,6 +131,24 @@ export const api = {
             method: 'DELETE',
           }),
       },
+    },
+    tasks: {
+      list: (tourId: string, dateId: string) =>
+        fetchApi<{ id: string; title: string; done: boolean; sortOrder: number; createdAt: string }[]>(
+          `/tours/${tourId}/dates/${dateId}/tasks`
+        ),
+      create: (tourId: string, dateId: string, body: { title: string }) =>
+        fetchApi<{ id: string; title: string; done: boolean; sortOrder: number; createdAt: string }>(
+          `/tours/${tourId}/dates/${dateId}/tasks`,
+          { method: 'POST', body: JSON.stringify(body) }
+        ),
+      update: (tourId: string, dateId: string, taskId: string, body: { title?: string; done?: boolean; sortOrder?: number }) =>
+        fetchApi<{ ok: boolean }>(`/tours/${tourId}/dates/${dateId}/tasks/${taskId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+        }),
+      delete: (tourId: string, dateId: string, taskId: string) =>
+        fetchApi<{ ok: boolean }>(`/tours/${tourId}/dates/${dateId}/tasks/${taskId}`, { method: 'DELETE' }),
     },
   },
   schedule: {
@@ -395,6 +418,30 @@ export const api = {
         { method: 'PATCH', body: JSON.stringify(body) }
       ),
     delete: (id: string) => fetchApi<{ ok: boolean }>(`/venue-contacts/${id}`, { method: 'DELETE' }),
+  },
+  venues: {
+    list: (params?: { q?: string }) => {
+      const sp = new URLSearchParams();
+      if (params?.q) sp.set('q', params.q);
+      const qs = sp.toString();
+      return fetchApi<{ id: string; name: string; city: string; address: string | null; notes: string | null }[]>(
+        qs ? `/venues?${qs}` : '/venues'
+      );
+    },
+    create: (body: { name: string; city: string; address?: string; notes?: string }) =>
+      fetchApi<{ id: string; name: string; city: string; address: string | null; notes: string | null }>(
+        '/venues',
+        { method: 'POST', body: JSON.stringify(body) }
+      ),
+    update: (
+      id: string,
+      body: { name?: string; city?: string; address?: string | null; notes?: string | null }
+    ) =>
+      fetchApi<{ id: string; name: string; city: string; address: string | null; notes: string | null }>(
+        `/venues/${id}`,
+        { method: 'PATCH', body: JSON.stringify(body) }
+      ),
+    delete: (id: string) => fetchApi<{ ok: boolean }>(`/venues/${id}`, { method: 'DELETE' }),
   },
   people: {
     list: (params?: { type?: string; q?: string }) => {

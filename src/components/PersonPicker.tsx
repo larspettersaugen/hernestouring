@@ -76,7 +76,7 @@ export function PersonPicker({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search by name..."
-          className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+          className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           autoFocus
         />
       </div>
@@ -88,17 +88,17 @@ export function PersonPicker({
         ) : multiSelect ? (
           <>
             <div className="flex gap-2 p-2 border-b border-stage-border sticky top-0 bg-stage-card">
-              <button type="button" onClick={selectAll} className="text-xs text-stage-muted hover:text-white">
+              <button type="button" onClick={selectAll} className="text-xs text-stage-muted hover:text-stage-fg">
                 Select all
               </button>
-              <button type="button" onClick={clearSelection} className="text-xs text-stage-muted hover:text-white">
+              <button type="button" onClick={clearSelection} className="text-xs text-stage-muted hover:text-stage-fg">
                 Clear
               </button>
             </div>
             {availablePeople.map((p) => (
               <label
                 key={p.id}
-                className="w-full flex items-center gap-3 p-3 cursor-pointer hover:bg-stage-dark has-[:checked]:bg-stage-accent/10"
+                className="w-full flex items-center gap-3 p-3 cursor-pointer hover:bg-stage-surface has-[:checked]:bg-stage-accent/10"
               >
                 <input
                   type="checkbox"
@@ -120,7 +120,7 @@ export function PersonPicker({
               key={p.id}
               type="button"
               onClick={() => onSelect({ ...p, role: roleMap(p.type) })}
-              className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-dark"
+              className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-surface"
             >
               <User className="h-4 w-4 text-stage-muted shrink-0" />
               <div className="min-w-0 flex-1">
@@ -137,12 +137,12 @@ export function PersonPicker({
             type="button"
             onClick={handleAddSelected}
             disabled={selectedIds.size === 0}
-            className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Add {selectedIds.size > 0 ? `${selectedIds.size} ` : ''}selected
           </button>
         )}
-        <button type="button" onClick={onCancel} className="text-sm text-stage-muted hover:text-white">
+        <button type="button" onClick={onCancel} className="text-sm text-stage-muted hover:text-stage-fg">
           Cancel
         </button>
       </div>

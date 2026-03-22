@@ -159,7 +159,7 @@ export function DayFilesSection({
                 </a>
                 <div className="flex items-center gap-2 shrink-0">
                   {f.advanceSection && (
-                    <span className="text-xs text-stage-muted bg-stage-dark px-1.5 py-0.5 rounded">
+                    <span className="text-xs text-stage-muted bg-stage-surface px-1.5 py-0.5 rounded">
                       {SECTION_LABELS[f.advanceSection] ?? f.advanceSection}
                     </span>
                   )}
@@ -192,7 +192,7 @@ export function DayFilesSection({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-stage-border text-stage-muted hover:text-white text-sm disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-stage-border text-stage-muted hover:text-stage-fg text-sm disabled:opacity-50"
             >
               <Upload className="h-3.5 w-3.5" />
               {uploading ? 'Uploading…' : 'Upload file'}

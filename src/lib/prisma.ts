@@ -1,9 +1,31 @@
 import { PrismaClient } from '@prisma/client';
 
-const prismaClientSingleton = () =>
-  new PrismaClient({
+/** True when DATABASE_URL was never replaced with a real Postgres URL (e.g. still from .env.example). */
+function isPlaceholderDatabaseUrl(url: string | undefined): boolean {
+  if (url == null || url.trim() === '') return true;
+  const u = url.toLowerCase();
+  return u.includes('ep-xxxx') || u.includes('user:password@');
+}
+
+function assertDatabaseUrlConfigured(): void {
+  const url = process.env.DATABASE_URL;
+  if (!isPlaceholderDatabaseUrl(url)) return;
+  throw new Error(
+    [
+      'DATABASE_URL is missing or still the .env.example placeholder.',
+      'Open https://neon.tech → your project → copy the connection string (pooled URL for Prisma).',
+      'Put it in .env or .env.local as DATABASE_URL=... then restart npm run dev.',
+      'Do not commit real URLs to git.',
+    ].join(' '),
+  );
+}
+
+const prismaClientSingleton = () => {
+  assertDatabaseUrlConfigured();
+  return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
+};
 
 declare global {
   var prismaGlobal: ReturnType<typeof prismaClientSingleton> | undefined;

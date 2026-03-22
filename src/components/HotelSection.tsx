@@ -94,7 +94,7 @@ function AddGuestForm({
         <select
           value={memberId}
           onChange={(e) => setMemberId(e.target.value)}
-          className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm min-w-[140px]"
+          className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm min-w-[140px]"
         >
           <option value="">Select person</option>
           {subgroupKeys.map((key) => {
@@ -119,7 +119,7 @@ function AddGuestForm({
             <select
               value={subgroupToAdd ?? ''}
               onChange={(e) => setSubgroupToAdd(e.target.value || null)}
-              className="px-2 py-1.5 rounded bg-stage-dark border border-stage-border text-white text-sm min-w-[120px]"
+              className="px-2 py-1.5 rounded bg-stage-surface border border-stage-border text-white text-sm min-w-[120px]"
             >
               <option value="">Select subgroup</option>
               {subgroupKeys.filter((k) => k != null).map((key) => (
@@ -139,7 +139,7 @@ function AddGuestForm({
           type="button"
           onClick={doAdd}
           disabled={!canAdd}
-          className="px-2 py-1.5 rounded bg-stage-accent text-stage-dark text-sm font-medium disabled:opacity-50"
+          className="px-2 py-1.5 rounded bg-stage-accent text-stage-accentFg text-sm font-medium disabled:opacity-50"
         >
           Add
         </button>
@@ -392,14 +392,14 @@ export function HotelSection({
                         onChange={(e) => setName(e.target.value)}
                         required
                         placeholder="Hotel name"
-                        className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                        className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                       />
                       <input
                         type="text"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="Address"
-                        className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                        className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <div>
@@ -409,7 +409,7 @@ export function HotelSection({
                             value={checkIn}
                             onChange={(e) => setCheckIn(e.target.value)}
                             required
-                            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                           />
                         </div>
                         <div>
@@ -419,7 +419,7 @@ export function HotelSection({
                             value={checkOut}
                             onChange={(e) => setCheckOut(e.target.value)}
                             required
-                            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                           />
                         </div>
                       </div>
@@ -428,14 +428,14 @@ export function HotelSection({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Notes"
-                        className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                        className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
                       />
                       {error && <p className="text-red-400 text-sm">{error}</p>}
                       <div className="flex gap-2">
                         <button
                           type="submit"
                           disabled={loading}
-                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
                         >
                           Save
                         </button>
@@ -499,14 +499,14 @@ export function HotelSection({
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Hotel name"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Address"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -516,7 +516,7 @@ export function HotelSection({
                   value={checkIn || defaultCheckIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                 />
               </div>
               <div>
@@ -526,7 +526,7 @@ export function HotelSection({
                   value={checkOut || defaultCheckOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white text-sm"
                 />
               </div>
             </div>
@@ -535,7 +535,7 @@ export function HotelSection({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             {travelingGroup.length > 0 && (
               <div className="space-y-2">
@@ -583,7 +583,7 @@ export function HotelSection({
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
               >
                 Add
               </button>

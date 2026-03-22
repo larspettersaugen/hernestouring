@@ -386,7 +386,7 @@ export function ScheduleSection({
             onChange={(e) => setLabel(e.target.value)}
             required
             placeholder="e.g. Soundcheck, Doors, Show"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
         </div>
         <div className="flex flex-wrap gap-3 items-end">
@@ -397,7 +397,7 @@ export function ScheduleSection({
               value={time}
               onChange={(e) => handleTimeChange(e.target.value)}
               required
-              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
+              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
             />
           </div>
           <div>
@@ -406,7 +406,7 @@ export function ScheduleSection({
               type="time"
               value={endTime}
               onChange={(e) => handleEndTimeChange(e.target.value)}
-              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
+              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
             />
           </div>
           <div>
@@ -415,7 +415,7 @@ export function ScheduleSection({
               type="time"
               value={durationMinutes}
               onChange={(e) => handleDurationChange(e.target.value)}
-              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
+              className="min-w-[110px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white font-mono text-base focus:outline-none focus:ring-2 focus:ring-stage-border"
               title="Hours:minutes (e.g. 01:30 for 1h 30m)"
             />
           </div>
@@ -424,7 +424,7 @@ export function ScheduleSection({
               type="checkbox"
               checked={dayAfter}
               onChange={(e) => setDayAfter(e.target.checked)}
-              className="rounded border-stage-border bg-stage-dark text-stage-accent"
+              className="rounded border-stage-border bg-stage-surface text-stage-accent"
             />
             Day after
           </label>
@@ -436,7 +436,7 @@ export function ScheduleSection({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Optional notes"
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
         </div>
         {error && <p className="text-red-400 text-sm">{error}</p>}
@@ -444,7 +444,7 @@ export function ScheduleSection({
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
           >
             {isEdit ? 'Save' : 'Add'}
           </button>
@@ -479,7 +479,7 @@ export function ScheduleSection({
                     e.target.value = '';
                   }}
                   disabled={templatesLoading || !!applyingTemplateId}
-                  className="px-2 py-1.5 rounded-lg bg-stage-dark border border-stage-border text-white text-sm min-w-[160px]"
+                  className="px-2 py-1.5 rounded-lg bg-stage-surface border border-stage-border text-white text-sm min-w-[160px]"
                 >
                   <option value="">Import from Day sheets…</option>
                   {templates.map((t) => (
@@ -507,13 +507,13 @@ export function ScheduleSection({
                   value={templateName}
                   onChange={(e) => setTemplateName(e.target.value)}
                   placeholder="Template name"
-                  className="px-2 py-1.5 rounded-lg bg-stage-dark border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
+                  className="px-2 py-1.5 rounded-lg bg-stage-surface border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
                   autoFocus
                 />
                 <button
                   type="submit"
                   disabled={!templateName.trim() || templateSaveLoading}
-                  className="px-2 py-1.5 rounded-lg bg-stage-accent text-stage-dark text-sm font-medium disabled:opacity-50"
+                  className="px-2 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg text-sm font-medium disabled:opacity-50"
                 >
                   Save
                 </button>
@@ -603,7 +603,7 @@ export function ScheduleSection({
                         className={`text-xs font-medium px-2 py-0.5 rounded ${
                           viewerPersonId && entry.flight.passengers.some((p) => p.personId === viewerPersonId)
                             ? 'bg-stage-accent/20 text-stage-accent'
-                            : 'bg-stage-dark text-stage-muted'
+                            : 'bg-stage-surface text-stage-muted'
                         }`}
                       >
                         {viewerPersonId && entry.flight.passengers.some((p) => p.personId === viewerPersonId)
@@ -659,7 +659,7 @@ export function ScheduleSection({
                         className={`text-xs font-medium px-2 py-0.5 rounded ${
                           viewerPersonId && entry.transport.passengers.some((p) => p.personId === viewerPersonId)
                             ? 'bg-stage-accent/20 text-stage-accent'
-                            : 'bg-stage-dark text-stage-muted'
+                            : 'bg-stage-surface text-stage-muted'
                         }`}
                       >
                         {viewerPersonId && entry.transport.passengers.some((p) => p.personId === viewerPersonId)

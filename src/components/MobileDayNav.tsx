@@ -24,7 +24,7 @@ export function MobileDayNav() {
           <a
             key={id}
             href={`#${id}`}
-            className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg text-stage-muted hover:text-stage-accent hover:bg-stage-dark/50 min-w-0"
+            className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg text-stage-muted hover:text-stage-accent hover:bg-stage-surface/50 min-w-0"
           >
             <Icon className="h-5 w-5 shrink-0" />
             <span className="text-xs truncate max-w-[72px]">{label}</span>

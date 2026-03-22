@@ -1,8 +1,18 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from './auth';
 
+/**
+ * Read the current session in RSC / route handlers.
+ * NextAuth's getServerSession throws on some failures (e.g. invalid JWT after secret change);
+ * we return null so pages redirect to login instead of a bare 500.
+ */
 export async function getSession() {
-  return getServerSession(authOptions);
+  try {
+    return await getServerSession(authOptions);
+  } catch (err) {
+    console.error('[getSession] Failed to read session (try signing out or fix NEXTAUTH_SECRET):', err);
+    return null;
+  }
 }
 
 export function canEdit(role: string | undefined): boolean {

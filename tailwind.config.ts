@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -23,12 +24,16 @@ const config: Config = {
       },
       colors: {
         stage: {
-          dark: '#0f0f12',
-          card: '#18181c',
-          border: '#2a2a30',
-          muted: '#71717a',
-          accent: '#f59e0b',
-          accentHover: '#d97706',
+          page: 'rgb(var(--stage-page) / <alpha-value>)',
+          surface: 'rgb(var(--stage-surface) / <alpha-value>)',
+          card: 'rgb(var(--stage-card) / <alpha-value>)',
+          border: 'rgb(var(--stage-border) / <alpha-value>)',
+          muted: 'rgb(var(--stage-muted) / <alpha-value>)',
+          accent: 'rgb(var(--stage-accent) / <alpha-value>)',
+          accentHover: 'rgb(var(--stage-accent-hover) / <alpha-value>)',
+          fg: 'rgb(var(--stage-fg) / <alpha-value>)',
+          /** Text on amber accent buttons (high contrast in both themes) */
+          accentFg: 'rgb(var(--stage-accent-fg) / <alpha-value>)',
         },
       },
     },

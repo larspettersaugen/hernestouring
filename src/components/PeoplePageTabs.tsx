@@ -47,8 +47,8 @@ export function PeoplePageTabs({
           onClick={() => setActiveTab('people')}
           className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition ${
             activeTab === 'people'
-              ? 'bg-stage-accent text-stage-dark'
-              : 'text-stage-muted hover:text-white'
+              ? 'bg-stage-accent text-stage-accentFg'
+              : 'text-stage-muted hover:text-stage-fg'
           }`}
         >
           <Users className="h-4 w-4" /> People
@@ -58,8 +58,8 @@ export function PeoplePageTabs({
           onClick={() => setActiveTab('groups')}
           className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition ${
             activeTab === 'groups'
-              ? 'bg-stage-accent text-stage-dark'
-              : 'text-stage-muted hover:text-white'
+              ? 'bg-stage-accent text-stage-accentFg'
+              : 'text-stage-muted hover:text-stage-fg'
           }`}
         >
           <FolderOpen className="h-4 w-4" /> Groups

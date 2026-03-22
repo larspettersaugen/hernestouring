@@ -165,7 +165,7 @@ export function ProfileContent({
                   setEmail(profile.email || '');
                   setNotes(profile.notes || '');
                 }}
-                className="p-2 rounded-lg text-stage-muted hover:text-stage-accent hover:bg-stage-dark"
+                className="p-2 rounded-lg text-stage-muted hover:text-stage-accent hover:bg-stage-surface"
                 aria-label="Edit"
               >
                 <Pencil className="h-4 w-4" />
@@ -195,26 +195,26 @@ export function ProfileContent({
           onChange={(e) => setName(e.target.value)}
           required
           placeholder="Name"
-          className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+          className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
         />
         <div>
           <label className="block text-xs text-stage-muted mb-1">Type</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
           >
             {PERSON_TYPES.map((pt) => (
               <option key={pt.value} value={pt.value}>{pt.label}</option>
             ))}
           </select>
         </div>
-        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
-        <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
+        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
+        <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <div className="flex gap-2">
-          <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50">Save</button>
+          <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50">Save</button>
           <button type="button" onClick={() => setMode('view')} className="px-4 py-2 rounded-lg border border-stage-border text-stage-muted">Cancel</button>
         </div>
       </form>
@@ -232,7 +232,7 @@ export function ProfileContent({
             value={linkSearch}
             onChange={(e) => setLinkSearch(e.target.value)}
             placeholder="Search by name..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+            className="w-full pl-9 pr-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
             autoFocus
           />
         </div>
@@ -250,7 +250,7 @@ export function ProfileContent({
                 type="button"
                 onClick={() => handleLink(p.id)}
                 disabled={loading}
-                className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-dark disabled:opacity-50"
+                className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-surface disabled:opacity-50"
               >
                 <User className="h-4 w-4 text-stage-muted shrink-0" />
                 <div className="min-w-0 flex-1">
@@ -262,7 +262,7 @@ export function ProfileContent({
           )}
         </div>
         {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button type="button" onClick={() => setMode('create')} className="text-sm text-stage-muted hover:text-white">
+        <button type="button" onClick={() => setMode('create')} className="text-sm text-stage-muted hover:text-stage-fg">
           Cancel · Create new instead
         </button>
       </div>
@@ -276,14 +276,14 @@ export function ProfileContent({
         <button
           type="button"
           onClick={() => setMode('create')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${mode === 'create' ? 'bg-stage-accent text-stage-dark' : 'border border-stage-border text-stage-muted hover:text-white'}`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium ${mode === 'create' ? 'bg-stage-accent text-stage-accentFg' : 'border border-stage-border text-stage-muted hover:text-stage-fg'}`}
         >
           Create new profile
         </button>
         <button
           type="button"
           onClick={() => setMode('link')}
-          className="px-4 py-2 rounded-lg text-sm font-medium border border-stage-border text-stage-muted hover:text-white"
+          className="px-4 py-2 rounded-lg text-sm font-medium border border-stage-border text-stage-muted hover:text-stage-fg"
         >
           Link existing profile
         </button>
@@ -296,25 +296,25 @@ export function ProfileContent({
           onChange={(e) => setName(e.target.value)}
           required
           placeholder="Name"
-          className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+          className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
         />
         <div>
           <label className="block text-xs text-stage-muted mb-1">Type</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white"
           >
             {PERSON_TYPES.map((pt) => (
               <option key={pt.value} value={pt.value}>{pt.label}</option>
             ))}
           </select>
         </div>
-        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
-        <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes" className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white" />
+        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
+        <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes" className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white" />
         {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50">
           Create & link profile
         </button>
       </form>

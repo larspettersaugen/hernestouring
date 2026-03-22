@@ -1,4 +1,5 @@
 node_modules
+# Secrets — never git add -f .env / .env.local (real DATABASE_URL, API keys).
 .env
 uploads
 prisma/dev.db

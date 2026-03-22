@@ -190,7 +190,7 @@ export function TravelingGroupSection({
                   type="button"
                   onClick={() => setShowPicker(true)}
                   disabled={loading}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium hover:bg-stage-accentHover disabled:opacity-50 text-sm"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium hover:bg-stage-accentHover disabled:opacity-50 text-sm"
                 >
                   <Plus className="h-4 w-4" /> Pick from people database
                 </button>
@@ -198,7 +198,7 @@ export function TravelingGroupSection({
                   type="button"
                   onClick={() => setShowGroupPicker(true)}
                   disabled={loading}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-white hover:border-stage-accent/50 disabled:opacity-50 text-sm"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-accent/50 disabled:opacity-50 text-sm"
                 >
                   <Users className="h-4 w-4" /> Add from group
                 </button>
@@ -269,7 +269,7 @@ export function TravelingGroupSection({
                         value={subgroupForSelected}
                         onChange={(e) => setSubgroupForSelected(e.target.value)}
                         placeholder="Group name (e.g. Crew, Band)"
-                        className="px-2 py-1.5 rounded-md bg-stage-dark border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
+                        className="px-2 py-1.5 rounded-md bg-stage-surface border border-stage-border text-white text-sm w-40 placeholder-zinc-500"
                       />
                       <button
                         type="button"
@@ -315,7 +315,7 @@ export function TravelingGroupSection({
                     return (
                       <li key={groupLabel ?? '__ungrouped__'}>
                         {groupLabel && (
-                          <div className="px-4 py-2 bg-stage-dark/50 border-b border-stage-border text-sm font-medium text-stage-muted">
+                          <div className="px-4 py-2 bg-stage-surface/50 border-b border-stage-border text-sm font-medium text-stage-muted">
                             {groupLabel}
                           </div>
                         )}
@@ -374,7 +374,7 @@ export function TravelingGroupSection({
               value={addToSubgroup}
               onChange={(e) => setAddToSubgroup(e.target.value)}
               placeholder="e.g. Crew, Band"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm"
             />
           </div>
         )}

@@ -50,14 +50,14 @@ export function DayNotesSection({
               onChange={(e) => setValue(e.target.value)}
               placeholder="Add notes for this day..."
               rows={4}
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm resize-y min-h-[120px]"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm resize-y min-h-[120px]"
             />
             {error && <p className="text-red-400 text-sm">{error}</p>}
             <button
               type="button"
               onClick={handleSave}
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
             >
               {loading ? 'Saving…' : 'Save'}
             </button>

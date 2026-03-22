@@ -74,7 +74,7 @@ export function TravelSection({
       <div className="rounded-xl bg-stage-card border border-stage-border overflow-hidden">
         <div className="p-4 border-b border-stage-border">
           <h2 className="text-sm font-semibold text-zinc-400 flex items-center gap-2 mb-3">Travel</h2>
-          <div className="flex gap-1 p-1 rounded-lg bg-stage-dark/50 border border-stage-border">
+          <div className="flex gap-1 p-1 rounded-lg bg-stage-surface/50 border border-stage-border">
             {subTabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
@@ -82,8 +82,8 @@ export function TravelSection({
                 onClick={() => setActiveTab(id)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition ${
                   activeTab === id
-                    ? 'bg-stage-dark text-white border border-stage-border shadow-sm'
-                    : 'text-stage-muted hover:text-white hover:bg-stage-dark/50'
+                    ? 'bg-stage-surface text-white border border-stage-border shadow-sm'
+                    : 'text-stage-muted hover:text-stage-fg hover:bg-stage-surface/50'
                 }`}
               >
                 <Icon className="h-4 w-4 shrink-0" />

@@ -2,16 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* Default = dark theme (before next-themes hydrates) */
+html,
+html.dark {
+  color-scheme: dark;
+  --stage-page: 15 15 18;
+  --stage-surface: 15 15 18;
+  --stage-card: 24 24 28;
+  --stage-border: 42 42 48;
+  --stage-muted: 161 161 170;
+  --stage-accent: 245 158 11;
+  --stage-accent-hover: 217 119 6;
+  --stage-fg: 250 250 250;
+  --stage-accent-fg: 24 24 27;
   --background: #0f0f12;
   --foreground: #fafafa;
-  --accent: #f59e0b;
+}
+
+html.light {
+  color-scheme: light;
+  --stage-page: 244 244 245;
+  --stage-surface: 244 244 245;
+  --stage-card: 255 255 255;
+  --stage-border: 228 228 231;
+  --stage-muted: 113 113 122;
+  --stage-accent: 234 88 12;
+  --stage-accent-hover: 194 65 12;
+  --stage-fg: 24 24 27;
+  --stage-accent-fg: 24 24 27;
+  --background: #f4f4f5;
+  --foreground: #18181b;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   min-height: 100vh;
+}
+
+/* Primary body text tracks theme (most screens use text-white for this) */
+@layer utilities {
+  .text-white {
+    color: rgb(var(--stage-fg) / 1) !important;
+  }
 }
 
 /* Remove clock icon from all time inputs (schedule, templates, transport) */
@@ -27,7 +60,6 @@ input[type="time"]::-webkit-inner-spin-button,
 input[type="time"]::-webkit-outer-spin-button {
   display: none;
 }
-/* Reduce native time input segment highlight; ensure text stays light on dark theme */
 input[type="time"]::-webkit-datetime-edit {
   background: transparent;
   color: var(--foreground);
@@ -70,7 +102,7 @@ input[type="time"]:focus {
     border-color: #e5e5e5;
   }
   .text-white {
-    color: #111;
+    color: #111 !important;
   }
   .text-stage-muted,
   .text-zinc-400,

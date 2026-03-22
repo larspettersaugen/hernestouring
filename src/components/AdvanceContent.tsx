@@ -1,7 +1,7 @@
 'use client';
 
 import { Wrench, UtensilsCrossed, Truck, Package, Upload, FileText, Check } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 
@@ -72,6 +72,31 @@ export function AdvanceContent({
   const [equipmentTransportDone, setEquipmentTransportDone] = useState(initial.equipmentTransportDone);
   const [equipmentTransportCompromises, setEquipmentTransportCompromises] = useState(initial.equipmentTransportCompromises);
   const [files, setFiles] = useState<AdvanceFile[]>(initialFiles);
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const refreshDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function softRefresh() {
+    startTransition(() => {
+      router.refresh();
+    });
+  }
+
+  /** Coalesce rapid Done/Compromises toggles so we don’t run a full RSC refresh on every click. */
+  function scheduleSoftRefresh() {
+    if (refreshDebounceRef.current) clearTimeout(refreshDebounceRef.current);
+    refreshDebounceRef.current = setTimeout(() => {
+      refreshDebounceRef.current = null;
+      softRefresh();
+    }, 400);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (refreshDebounceRef.current) clearTimeout(refreshDebounceRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     setTechnicalInfo(initial.technicalInfo ?? '');
     setRider(initial.rider ?? '');
@@ -90,7 +115,6 @@ export function AdvanceContent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState<string | null>(null);
-  const router = useRouter();
   const fileInputRefs: Record<string, React.RefObject<HTMLInputElement>> = {
     technical: useRef<HTMLInputElement>(null),
     rider: useRef<HTMLInputElement>(null),
@@ -116,7 +140,7 @@ export function AdvanceContent({
         equipmentTransportDone,
         equipmentTransportCompromises,
       });
-      router.refresh();
+      softRefresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
     } finally {
@@ -143,23 +167,51 @@ export function AdvanceContent({
       updates.equipmentTransportDone = field === 'done' ? value : (value ? false : equipmentTransportDone);
       updates.equipmentTransportCompromises = field === 'compromises' ? value : (value ? false : equipmentTransportCompromises);
     }
+
+    let revert: () => void;
+    if (section === 'technical') {
+      const td = technicalDone;
+      const tc = technicalCompromises;
+      revert = () => {
+        setTechnicalDone(td);
+        setTechnicalCompromises(tc);
+      };
+      setTechnicalDone(updates.technicalDone as boolean);
+      setTechnicalCompromises(updates.technicalCompromises as boolean);
+    } else if (section === 'rider') {
+      const rd = riderDone;
+      const rc = riderCompromises;
+      revert = () => {
+        setRiderDone(rd);
+        setRiderCompromises(rc);
+      };
+      setRiderDone(updates.riderDone as boolean);
+      setRiderCompromises(updates.riderCompromises as boolean);
+    } else if (section === 'logistics') {
+      const ld = logisticsDone;
+      const lc = logisticsCompromises;
+      revert = () => {
+        setLogisticsDone(ld);
+        setLogisticsCompromises(lc);
+      };
+      setLogisticsDone(updates.logisticsDone as boolean);
+      setLogisticsCompromises(updates.logisticsCompromises as boolean);
+    } else {
+      const ed = equipmentTransportDone;
+      const ec = equipmentTransportCompromises;
+      revert = () => {
+        setEquipmentTransportDone(ed);
+        setEquipmentTransportCompromises(ec);
+      };
+      setEquipmentTransportDone(updates.equipmentTransportDone as boolean);
+      setEquipmentTransportCompromises(updates.equipmentTransportCompromises as boolean);
+    }
+
     try {
       await api.dates.advance.update(tourId, dateId, updates);
-      if (section === 'technical') {
-        setTechnicalDone(updates.technicalDone ?? technicalDone);
-        setTechnicalCompromises(updates.technicalCompromises ?? technicalCompromises);
-      } else if (section === 'rider') {
-        setRiderDone(updates.riderDone ?? riderDone);
-        setRiderCompromises(updates.riderCompromises ?? riderCompromises);
-      } else if (section === 'logistics') {
-        setLogisticsDone(updates.logisticsDone ?? logisticsDone);
-        setLogisticsCompromises(updates.logisticsCompromises ?? logisticsCompromises);
-      } else {
-        setEquipmentTransportDone(updates.equipmentTransportDone ?? equipmentTransportDone);
-        setEquipmentTransportCompromises(updates.equipmentTransportCompromises ?? equipmentTransportCompromises);
-      }
-      router.refresh();
+      scheduleSoftRefresh();
     } catch {
+      revert();
       setError('Failed to update');
     }
   }
@@ -174,7 +226,7 @@ export function AdvanceContent({
       }
       const list = await api.dates.advance.files.list(tourId, dateId);
       setFiles(list);
-      router.refresh();
+      softRefresh();
     } catch {
       setError('Failed to upload file');
     } finally {
@@ -248,56 +300,78 @@ export function AdvanceContent({
                 <p className="text-xs text-stage-muted mt-0.5">{description}</p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <label className="flex items-center gap-1.5 cursor-pointer">
+                <div
+                  role="checkbox"
+                  tabIndex={allowChecklistToggle ? 0 : -1}
+                  aria-checked={done}
+                  aria-disabled={!allowChecklistToggle}
+                  aria-label={`${label}: done`}
+                  onClick={() => allowChecklistToggle && handleCheckboxChange(sectionId, 'done', !done)}
+                  onKeyDown={(e) => {
+                    if (allowChecklistToggle && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      handleCheckboxChange(sectionId, 'done', !done);
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 rounded-md py-0.5 -my-0.5 -mx-0.5 px-0.5 outline-none transition-colors ${
+                    allowChecklistToggle
+                      ? 'cursor-pointer hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-stage-accent/60'
+                      : 'cursor-default opacity-70'
+                  }`}
+                >
                   <span
-                    role="checkbox"
-                    tabIndex={0}
-                    aria-checked={done}
-                    onClick={() => allowChecklistToggle && handleCheckboxChange(sectionId, 'done', !done)}
-                    onKeyDown={(e) => {
-                      if (allowChecklistToggle && (e.key === 'Enter' || e.key === ' ')) {
-                        e.preventDefault();
-                        handleCheckboxChange(sectionId, 'done', !done);
-                      }
-                    }}
-                    className={`inline-flex h-5 w-5 items-center justify-center rounded border transition-colors ${
-                      done ? 'bg-emerald-500/30 border-emerald-500/50' : 'border-stage-border bg-stage-dark'
-                    } ${allowChecklistToggle ? 'cursor-pointer hover:border-stage-muted' : 'cursor-default'}`}
+                    className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 shadow-sm transition-colors ${
+                      done
+                        ? 'bg-emerald-500/30 border-emerald-500/70'
+                        : 'border-stage-fg/35 bg-stage-card ring-1 ring-stage-fg/10'
+                    }`}
+                    aria-hidden
                   >
-                    {done && <Check className="h-3 w-3 text-emerald-400" />}
+                    {done && <Check className="h-3.5 w-3.5 text-emerald-400" strokeWidth={2.5} />}
                   </span>
-                  <span className="text-xs text-stage-muted">Done</span>
-                </label>
-                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <span className="text-xs font-medium text-stage-fg select-none">Done</span>
+                </div>
+                <div
+                  role="checkbox"
+                  tabIndex={allowChecklistToggle ? 0 : -1}
+                  aria-checked={compromises}
+                  aria-disabled={!allowChecklistToggle}
+                  aria-label={`${label}: compromises`}
+                  onClick={() => allowChecklistToggle && handleCheckboxChange(sectionId, 'compromises', !compromises)}
+                  onKeyDown={(e) => {
+                    if (allowChecklistToggle && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      handleCheckboxChange(sectionId, 'compromises', !compromises);
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 rounded-md py-0.5 -my-0.5 -mx-0.5 px-0.5 outline-none transition-colors ${
+                    allowChecklistToggle
+                      ? 'cursor-pointer hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-stage-accent/60'
+                      : 'cursor-default opacity-70'
+                  }`}
+                >
                   <span
-                    role="checkbox"
-                    tabIndex={0}
-                    aria-checked={compromises}
-                    onClick={() => allowChecklistToggle && handleCheckboxChange(sectionId, 'compromises', !compromises)}
-                    onKeyDown={(e) => {
-                      if (allowChecklistToggle && (e.key === 'Enter' || e.key === ' ')) {
-                        e.preventDefault();
-                        handleCheckboxChange(sectionId, 'compromises', !compromises);
-                      }
-                    }}
-                    className={`inline-flex h-5 w-5 items-center justify-center rounded border transition-colors ${
-                      compromises ? 'bg-amber-500/30 border-amber-500/50' : 'border-stage-border bg-stage-dark'
-                    } ${allowChecklistToggle ? 'cursor-pointer hover:border-stage-muted' : 'cursor-default'}`}
+                    className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 shadow-sm transition-colors ${
+                      compromises
+                        ? 'bg-amber-500/30 border-amber-500/70'
+                        : 'border-stage-fg/35 bg-stage-card ring-1 ring-stage-fg/10'
+                    }`}
+                    aria-hidden
                   >
-                    {compromises && <Check className="h-3 w-3 text-amber-400" />}
+                    {compromises && <Check className="h-3.5 w-3.5 text-amber-400" strokeWidth={2.5} />}
                   </span>
-                  <span className="text-xs text-stage-muted">Compromises</span>
-                </label>
+                  <span className="text-xs font-medium text-stage-fg select-none">Compromises</span>
+                </div>
               </div>
             </div>
-            <div className="rounded-lg bg-stage-dark/50 border border-stage-border/50 overflow-hidden">
+            <div className="rounded-lg bg-stage-surface/50 border border-stage-border/50 overflow-hidden">
               {allowEdit ? (
                 <textarea
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   placeholder={`Add ${label.toLowerCase()} info...`}
                   rows={5}
-                  className="w-full px-3 py-2 rounded-lg bg-stage-dark border-0 text-white placeholder-zinc-500 text-sm resize-y min-h-[100px] focus:ring-1 focus:ring-stage-accent"
+                  className="w-full px-3 py-2 rounded-lg bg-stage-surface border-0 text-white placeholder-zinc-500 text-sm resize-y min-h-[100px] focus:ring-1 focus:ring-stage-accent"
                 />
               ) : (
                 <div className="p-4">
@@ -325,7 +399,7 @@ export function AdvanceContent({
                         href={downloadUrl(f.id)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-stage-dark border border-stage-border text-sm text-stage-accent hover:underline"
+                        className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-stage-surface border border-stage-border text-sm text-stage-accent hover:underline"
                       >
                         <FileText className="h-3.5 w-3.5" /> {f.filename}
                         {f.sizeBytes != null && (
@@ -349,7 +423,7 @@ export function AdvanceContent({
                     type="button"
                     onClick={() => fileInputRefs[sectionId].current?.click()}
                     disabled={!!uploading}
-                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-stage-border text-stage-muted hover:text-white text-sm disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-stage-border text-stage-muted hover:text-stage-fg text-sm disabled:opacity-50"
                   >
                     <Upload className="h-3.5 w-3.5" />
                     {uploading === sectionId ? 'Uploading…' : 'Upload file'}
@@ -370,7 +444,7 @@ export function AdvanceContent({
             type="button"
             onClick={handleSave}
             disabled={loading}
-            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
           >
             {loading ? 'Saving…' : 'Save'}
           </button>

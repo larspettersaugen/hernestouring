@@ -395,7 +395,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
             {expandedId === g.id && expandedGroup?.id === g.id && (
               <div className="px-4 pb-4 pt-0 border-t border-stage-border">
                 {allowEdit && addPersonGroupId === g.id && (
-                  <div className="mt-3 mb-3 rounded-lg border border-stage-border bg-stage-dark/50 p-3 space-y-2">
+                  <div className="mt-3 mb-3 rounded-lg border border-stage-border bg-stage-surface/50 p-3 space-y-2">
                     <p className="text-xs font-medium text-stage-muted uppercase tracking-wide">
                       {addToSubgroup.trim() ? `Assign to ${addToSubgroup.trim()}` : 'Add person to group'}
                     </p>
@@ -424,14 +424,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 <button
                                   type="button"
                                   onClick={selectAllAvailable}
-                                  className="text-xs text-stage-muted hover:text-white"
+                                  className="text-xs text-stage-muted hover:text-stage-fg"
                                 >
                                   Select all
                                 </button>
                                 <button
                                   type="button"
                                   onClick={clearSelection}
-                                  className="text-xs text-stage-muted hover:text-white"
+                                  className="text-xs text-stage-muted hover:text-stage-fg"
                                 >
                                   Clear
                                 </button>
@@ -460,7 +460,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                             type="button"
                             onClick={() => handleAddSelectedMembers(g.id)}
                             disabled={selectedPersonIds.size === 0}
-                            className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                         {addToSubgroup.trim() ? 'Assign' : 'Add'}
                         {selectedPersonIds.size > 0 ? ` ${selectedPersonIds.size} ` : ' '}selected
@@ -473,7 +473,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               setPersonSearch('');
                               setSelectedPersonIds(new Set());
                             }}
-                            className="text-sm text-stage-muted hover:text-white"
+                            className="text-sm text-stage-muted hover:text-stage-fg"
                           >
                             Cancel
                           </button>
@@ -499,7 +499,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                     return (
                       <>
                         {/* Subgroups first – even when empty */}
-                        <div className="mt-3 rounded-lg border border-stage-border bg-stage-dark/30 overflow-hidden">
+                        <div className="mt-3 rounded-lg border border-stage-border bg-stage-surface/30 overflow-hidden">
                           <div className="px-3 py-2 border-b border-stage-border bg-stage-card/50">
                             <p className="text-xs font-medium text-stage-muted uppercase tracking-wide">
                               Subgroups
@@ -514,7 +514,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                   value={createSubgroupName}
                                   onChange={(e) => setCreateSubgroupName(e.target.value)}
                                   placeholder="Subgroup name (e.g. Band, Crew)"
-                                  className="flex-1 min-w-[180px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm"
+                                  className="flex-1 min-w-[180px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm"
                                   autoFocus
                                   onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
@@ -545,14 +545,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                     setCreateSubgroupGroupId(null);
                                     setCreateSubgroupName('');
                                   }}
-                                  className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark text-sm font-medium"
+                                  className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg text-sm font-medium"
                                 >
                                   Create
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => { setCreateSubgroupGroupId(null); setCreateSubgroupName(''); }}
-                                  className="text-sm text-stage-muted hover:text-white"
+                                  className="text-sm text-stage-muted hover:text-stage-fg"
                                 >
                                   Cancel
                                 </button>
@@ -564,7 +564,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                   value={newSubgroupName}
                                   onChange={(e) => setNewSubgroupName(e.target.value)}
                                   placeholder="Subgroup name (e.g. Band, Crew)"
-                                  className="flex-1 px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm"
+                                  className="flex-1 px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm"
                                   autoFocus
                                   onKeyDown={async (e) => {
                                     if (e.key === 'Enter') {
@@ -588,7 +588,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 <button
                                   type="button"
                                   onClick={() => { setNewSubgroupFor(null); setNewSubgroupName(''); }}
-                                  className="text-sm text-stage-muted hover:text-white"
+                                  className="text-sm text-stage-muted hover:text-stage-fg"
                                 >
                                   Cancel
                                 </button>
@@ -615,7 +615,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 <button
                                   type="button"
                                   onClick={(e) => { e.stopPropagation(); setCreateSubgroupGroupId(g.id); setCreateSubgroupName(''); }}
-                                  className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark text-sm font-medium"
+                                  className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg text-sm font-medium"
                                 >
                                   Create
                                 </button>
@@ -628,7 +628,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                         </div>
 
                         {/* Members below */}
-                        <div className="mt-3 rounded-lg border border-stage-border bg-stage-dark/30 overflow-hidden">
+                        <div className="mt-3 rounded-lg border border-stage-border bg-stage-surface/30 overflow-hidden">
                           <div className="px-3 py-2 border-b border-stage-border bg-stage-card/50 flex items-center justify-between gap-2">
                             <p className="text-xs font-medium text-stage-muted uppercase tracking-wide">
                               Members
@@ -638,14 +638,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 <button
                                   type="button"
                                   onClick={selectAllMembers}
-                                  className="text-xs text-stage-muted hover:text-white"
+                                  className="text-xs text-stage-muted hover:text-stage-fg"
                                 >
                                   Select all
                                 </button>
                                 <button
                                   type="button"
                                   onClick={clearMemberSelection}
-                                  className="text-xs text-stage-muted hover:text-white"
+                                  className="text-xs text-stage-muted hover:text-stage-fg"
                                 >
                                   Clear
                                 </button>
@@ -661,7 +661,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 onDragEnd={handleDragEnd}
                                 onClick={allowEdit ? (e) => handleMemberClick(m.personId, e) : undefined}
                                 className={`py-2 flex items-center gap-2 rounded cursor-grab active:cursor-grabbing ${
-                                  allowEdit ? 'hover:bg-stage-dark/50 cursor-pointer' : ''
+                                  allowEdit ? 'hover:bg-stage-surface/50 cursor-pointer' : ''
                                 } ${selectedMemberIds.has(m.personId) ? 'bg-stage-accent/10' : ''}`}
                               >
                                 {allowEdit && (
@@ -696,7 +696,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                   return (
                     <>
                       {/* Subgroups first – above Members */}
-                      <div className="mt-3 rounded-lg border border-stage-border bg-stage-dark/30 overflow-hidden">
+                      <div className="mt-3 rounded-lg border border-stage-border bg-stage-surface/30 overflow-hidden">
                         <div className="px-3 py-2 border-b border-stage-border bg-stage-card/50 flex items-center justify-between gap-2">
                           <p className="text-xs font-medium text-stage-muted uppercase tracking-wide">
                             Subgroups
@@ -706,14 +706,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               <button
                                 type="button"
                                 onClick={selectAllMembers}
-                                className="text-xs text-stage-muted hover:text-white"
+                                className="text-xs text-stage-muted hover:text-stage-fg"
                               >
                                 Select all
                               </button>
                               <button
                                 type="button"
                                 onClick={clearMemberSelection}
-                                className="text-xs text-stage-muted hover:text-white"
+                                className="text-xs text-stage-muted hover:text-stage-fg"
                               >
                                 Clear
                               </button>
@@ -790,7 +790,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                     onDragEnd={handleDragEnd}
                                     onClick={allowEdit ? (e) => handleMemberClick(m.personId, e) : undefined}
                                     className={`py-2 flex items-center gap-2 pl-2 border-l-2 border-stage-border rounded cursor-grab active:cursor-grabbing ${
-                                      allowEdit ? 'hover:bg-stage-dark/50 cursor-pointer' : ''
+                                      allowEdit ? 'hover:bg-stage-surface/50 cursor-pointer' : ''
                                     } ${selectedMemberIds.has(m.personId) ? 'bg-stage-accent/10' : ''}`}
                                   >
                                     {allowEdit && (
@@ -817,7 +817,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                       <button
                                         type="button"
                                         onClick={(e) => { e.stopPropagation(); handleUpdateMemberSubgroup(g.id, m.personId, null); }}
-                                        className="p-1.5 rounded text-stage-muted hover:text-white hover:bg-stage-dark shrink-0"
+                                        className="p-1.5 rounded text-stage-muted hover:text-stage-fg hover:bg-stage-surface shrink-0"
                                         title="Move to Members"
                                         aria-label={`Move ${m.name} to Members`}
                                       >
@@ -841,7 +841,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 value={createSubgroupName}
                                 onChange={(e) => setCreateSubgroupName(e.target.value)}
                                 placeholder="Subgroup name (e.g. Band, Crew)"
-                                className="flex-1 min-w-[180px] px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm"
+                                className="flex-1 min-w-[180px] px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm"
                                 autoFocus
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
@@ -872,14 +872,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                   setCreateSubgroupGroupId(null);
                                   setCreateSubgroupName('');
                                 }}
-                                className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark text-sm font-medium"
+                                className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg text-sm font-medium"
                               >
                                 Create
                               </button>
                               <button
                                 type="button"
                                 onClick={() => { setCreateSubgroupGroupId(null); setCreateSubgroupName(''); }}
-                                className="text-sm text-stage-muted hover:text-white"
+                                className="text-sm text-stage-muted hover:text-stage-fg"
                               >
                                 Cancel
                               </button>
@@ -891,7 +891,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                                 value={newSubgroupName}
                                 onChange={(e) => setNewSubgroupName(e.target.value)}
                                 placeholder="Subgroup name (e.g. Band, Crew)"
-                                className="flex-1 px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500 text-sm"
+                                className="flex-1 px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500 text-sm"
                                 autoFocus
                                 onKeyDown={async (e) => {
                                   if (e.key === 'Enter') {
@@ -915,7 +915,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               <button
                                 type="button"
                                 onClick={() => { setNewSubgroupFor(null); setNewSubgroupName(''); }}
-                                className="text-sm text-stage-muted hover:text-white"
+                                className="text-sm text-stage-muted hover:text-stage-fg"
                               >
                                 Cancel
                               </button>
@@ -942,7 +942,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); setCreateSubgroupGroupId(g.id); setCreateSubgroupName(''); }}
-                                className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-dark text-sm font-medium"
+                                className="px-3 py-1.5 rounded-lg bg-stage-accent text-stage-accentFg text-sm font-medium"
                               >
                                 Create
                               </button>
@@ -956,7 +956,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                     </div>
 
                       {/* Members (Unassigned) – below Subgroups */}
-                      <div className="mt-3 rounded-lg border border-stage-border bg-stage-dark/30 overflow-hidden">
+                      <div className="mt-3 rounded-lg border border-stage-border bg-stage-surface/30 overflow-hidden">
                         <div className="px-3 py-2 border-b border-stage-border bg-stage-card/50 flex items-center justify-between gap-2">
                           <p className="text-xs font-medium text-stage-muted uppercase tracking-wide">
                             Members
@@ -966,14 +966,14 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               <button
                                 type="button"
                                 onClick={selectAllMembers}
-                                className="text-xs text-stage-muted hover:text-white"
+                                className="text-xs text-stage-muted hover:text-stage-fg"
                               >
                                 Select all
                               </button>
                               <button
                                 type="button"
                                 onClick={clearMemberSelection}
-                                className="text-xs text-stage-muted hover:text-white"
+                                className="text-xs text-stage-muted hover:text-stage-fg"
                               >
                                 Clear
                               </button>
@@ -993,7 +993,7 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
                               onDragEnd={handleDragEnd}
                               onClick={allowEdit ? (e) => handleMemberClick(m.personId, e) : undefined}
                               className={`py-2 flex items-center gap-2 rounded cursor-grab active:cursor-grabbing ${
-                                allowEdit ? 'hover:bg-stage-dark/50 cursor-pointer' : ''
+                                allowEdit ? 'hover:bg-stage-surface/50 cursor-pointer' : ''
                               } ${selectedMemberIds.has(m.personId) ? 'bg-stage-accent/10' : ''}`}
                             >
                               {allowEdit && (
@@ -1049,13 +1049,13 @@ export function GroupsContent({ allowEdit }: { allowEdit: boolean }) {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Group name, e.g. Astrid S 2025"
-              className="flex-1 px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="flex-1 px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               autoFocus
             />
             <button
               type="submit"
               disabled={!newName.trim()}
-              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
             >
               Create
             </button>

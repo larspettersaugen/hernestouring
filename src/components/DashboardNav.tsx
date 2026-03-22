@@ -5,13 +5,14 @@ import { signOut } from 'next-auth/react';
 import { Calendar, LogOut, Menu, Users, UserCircle, Contact } from 'lucide-react';
 import { useState } from 'react';
 import type { User } from 'next-auth';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function DashboardNav({ user }: { user: User }) {
   const [open, setOpen] = useState(false);
   const role = (user as { role?: string }).role;
 
   return (
-    <header className="sticky top-0 z-50 shrink-0 w-full border-b border-stage-border bg-stage-dark text-white">
+    <header className="sticky top-0 z-50 shrink-0 w-full border-b border-stage-border bg-stage-surface text-white">
       <div className="flex flex-nowrap items-center justify-between h-14 px-4 max-w-6xl mx-auto w-full">
         <div className="flex flex-shrink-0 items-center gap-3 min-w-0">
           <Link href="/dashboard" className="flex items-center gap-2 text-white font-semibold shrink-0">
@@ -34,6 +35,7 @@ export function DashboardNav({ user }: { user: User }) {
           </Link>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <ThemeToggle />
           <span className="text-stage-muted text-sm hidden sm:inline capitalize">{role}</span>
           <div className="relative">
             <button
@@ -53,14 +55,14 @@ export function DashboardNav({ user }: { user: User }) {
                   <Link
                     href="/dashboard/profile"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-white hover:bg-stage-dark"
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-white hover:bg-stage-surface"
                   >
                     <UserCircle className="h-4 w-4" />
                     My profile
                   </Link>
                   <button
                     onClick={() => signOut({ callbackUrl: '/login' })}
-                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-red-400 hover:bg-stage-dark"
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-red-400 hover:bg-stage-surface"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out

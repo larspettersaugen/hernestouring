@@ -136,6 +136,8 @@ model TourDate {
   promoterPhone String?
   promoterEmail String?
   notes         String?  // day notes for this date
+  // User-confirmed: all advance "Done" + all tasks done; shows checkmark on tour overview.
+  advanceComplete Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   scheduleItems ScheduleItem[]
@@ -145,6 +147,18 @@ model TourDate {
   dateMembers TourDateMember[]
   advance     Advance?
   advanceFiles AdvanceFile[]
+  tasks       TourDateTask[]
+}
+
+model TourDateTask {
+  id         String   @id @default(cuid())
+  tourDateId String
+  tourDate   TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  title      String
+  done       Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Advance {
@@ -177,6 +191,17 @@ model AdvanceFile {
   mimeType       String?
   sizeBytes      Int?
   createdAt      DateTime @default(now())
+}
+
+// Saved concert / event locations (reference list; tour dates still store venue text independently).
+model Venue {
+  id        String   @id @default(cuid())
+  name      String   // venue or room name
+  city      String
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model VenueContact {

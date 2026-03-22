@@ -8,7 +8,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await getSession();
   if (!session?.user) redirect('/login');
   return (
-    <div className="min-h-screen flex flex-col bg-stage-dark w-full overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-stage-surface w-full overflow-hidden">
       <div className="flex flex-1 min-h-0 w-full min-w-0 overflow-hidden">
         <TourDatesSidebarProvider>
           <DashboardLayoutClient user={session.user}>

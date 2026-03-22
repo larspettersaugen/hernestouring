@@ -1,13 +1,8 @@
 import { redirect } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
 import { hasExtendedAccess, getViewerAssignedTourIds } from '@/lib/viewer-access';
-
-const TourDatesSidebar = dynamic(
-  () => import('@/components/TourDatesSidebar').then((m) => ({ default: m.TourDatesSidebar })),
-  { ssr: false }
-);
+import { TourDatesSidebar } from '@/components/TourDatesSidebar';
 
 export default async function TourLayout({
   children,
@@ -38,6 +33,7 @@ export default async function TourLayout({
     endDate: d.endDate?.toISOString() ?? null,
     kind: d.kind,
     address: d.address,
+    advanceComplete: d.advanceComplete,
   }));
 
   return (

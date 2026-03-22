@@ -5,11 +5,14 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
 ## Stack
 
 - **Next.js 14** (App Router), TypeScript, Tailwind CSS
-- **Prisma** + **PostgreSQL** (local Docker or hosted; see `DEPLOY.md` for Vercel + Neon)
+- **Prisma** + **PostgreSQL** (Neon recommended; see **Setup** below and `DEPLOY.md` for Vercel)
 - **NextAuth** (credentials + optional Google OAuth, JWT, roles: viewer / editor / admin)
 - **PWA** (production build): installable, optional offline via `@ducanh2912/next-pwa`
+- **Theme:** Light / dark mode (`next-themes`), persisted in `localStorage`. Toggle: sun/moon in the dashboard sidebar (and mobile header), top bar when used, and on login / invite / join pages.
 
-## Setup
+## Setup (from scratch)
+
+Use **one** PostgreSQL database. **Neon** is the recommended default (free tier, no Docker).
 
 1. **Install dependencies**
 
@@ -17,24 +20,49 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
    npm install
    ```
 
-2. **Environment**
-
-   Copy `.env.example` to `.env` and set:
-
-   - `DATABASE_URL` — PostgreSQL URL (see `.env.example`; for a public beta URL see **`DEPLOY.md`**)
-   - `NEXTAUTH_SECRET` (e.g. `openssl rand -base64 32`)
-   - `NEXTAUTH_URL="http://localhost:3000"` (or your URL)
-
-3. **Database**
+2. **Environment file**
 
    ```bash
-   npx prisma migrate dev
-   npx prisma db seed
+   cp .env.example .env
    ```
 
-   `db seed` only creates the three dev login accounts. To load a full dataset from an old **`prisma/dev.db`** into PostgreSQL (replaces all data in `DATABASE_URL`), run **`npm run db:import-sqlite`** (see `DEPLOY.md`).
+   Edit **`.env`**:
 
-4. **Run**
+   - **`DATABASE_URL`** — In [Neon](https://neon.tech): create a project → copy the **connection string** (use the **pooled** / pooler host if offered). Paste it here.  
+     If Prisma errors on connect, see comments in `.env.example` (`sslmode=require`, remove `channel_binding=require` if present).
+   - **`NEXTAUTH_SECRET`** — Run `openssl rand -base64 32` and paste the output.
+   - **`NEXTAUTH_URL`** — For local dev: `http://localhost:3000`
+
+3. **Apply database schema**
+
+   This creates/updates tables in the database pointed to by `DATABASE_URL`.
+
+   **Fresh Neon database (empty):**
+
+   ```bash
+   npm run db:generate
+   npm run db:migrate:deploy
+   npm run db:seed
+   ```
+
+   These commands load **`.env` then `.env.local`** (same as Next.js), so your Neon URL can live in **`.env.local`** only. **Precedence:** if `DATABASE_URL` exists in **both** files, **`.env.local` wins**—a leftover example line there will override a correct `.env` and look like “still placeholder” errors.
+
+   **Local development (creates migration files if you change `schema.prisma`):**
+
+   ```bash
+   npm run db:generate
+   npx dotenv -o -e .env -e .env.local -- prisma migrate dev
+   npm run db:seed
+   ```
+
+   `db seed` adds the three dev logins (admin / editor / viewer).  
+   To import an old SQLite **`prisma/dev.db`** into Postgres (wipes that DB), see **`npm run db:import-sqlite`** in `DEPLOY.md`.
+
+   **If `migrate deploy` errors** (e.g. “relation already exists”): your Neon DB may have been created with `db push` instead of migrations. Use **`npm run db:push`** once to align the schema, then talk to your team about [baselining migrations](https://www.prisma.io/docs/guides/migrate/developing-with-create-only) for the future.
+
+   **Tasks page: “TourDateTask does not exist”:** the database is missing the latest migration. Run **`npm run db:migrate:deploy`** (or **`npm run db:push`**) after pulling new code, with `DATABASE_URL` set in `.env` or `.env.local`.
+
+4. **Run the app**
 
    ```bash
    npm run dev
@@ -48,7 +76,14 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
    - **Editor:** editor@tour.local / editor123  
    - **Viewer:** viewer@tour.local / viewer123
 
-5. **Google sign-in (optional)**
+5. **“Internal Server Error” on localhost (plain black page)**
+
+   - Check the **terminal** where `npm run dev` is running—the real error is logged there, not in the browser.
+   - **`DATABASE_URL`:** Must be a real Postgres URL from Neon (or local Postgres). If the error mentions `ep-xxxx` or `USER:PASSWORD`, you still have the **`.env.example` placeholder**—replace it in `.env` or `.env.local` and restart dev.
+   - **`NEXTAUTH_SECRET`:** Must be a real random string (`openssl rand -base64 32`). If you change it, old session cookies become invalid—**clear cookies** for localhost or use a private window.
+   - **Stale build:** `npm run dev:kill` then `rm -rf .next` then `npm run dev` (see project stability rules).
+
+6. **Google sign-in (optional)**
 
    Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `.env` to enable “Sign in with Google”:
 

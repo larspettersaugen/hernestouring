@@ -220,13 +220,13 @@ export function CreateDaySheetTemplateForm({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Standard concert day"
             required
-            className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+            className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
           />
       </div>
       <div>
         <label className="block text-xs text-stage-muted mb-2">Schedule items</label>
         {items.length > 0 && (
-          <ul className="divide-y divide-stage-border rounded-lg bg-stage-dark border border-stage-border overflow-hidden mb-4">
+          <ul className="divide-y divide-stage-border rounded-lg bg-stage-surface border border-stage-border overflow-hidden mb-4">
             {(() => {
               const sortedIndices = items.map((_, i) => i).sort((a, b) => {
                 const ia = items[a];
@@ -286,7 +286,7 @@ export function CreateDaySheetTemplateForm({
                             type="checkbox"
                             checked={formItem.dayAfter}
                             onChange={(e) => updateFormItem('dayAfter', e.target.checked)}
-                            className="rounded border-stage-border bg-stage-dark text-stage-accent"
+                            className="rounded border-stage-border bg-stage-surface text-stage-accent"
                           />
                           Day after
                         </label>
@@ -305,7 +305,7 @@ export function CreateDaySheetTemplateForm({
                         <button
                           type="button"
                           onClick={() => saveEdit()}
-                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium"
+                          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium"
                         >
                           Save
                         </button>
@@ -372,7 +372,7 @@ export function CreateDaySheetTemplateForm({
             e.preventDefault();
             addItemToList();
           }}
-          className="space-y-3 p-4 rounded-lg bg-stage-dark border border-stage-border"
+          className="space-y-3 p-4 rounded-lg bg-stage-surface border border-stage-border"
         >
           <div>
             <label className="block text-xs text-stage-muted mb-1">Label</label>
@@ -418,7 +418,7 @@ export function CreateDaySheetTemplateForm({
                 type="checkbox"
                 checked={formItem.dayAfter}
                 onChange={(e) => updateFormItem('dayAfter', e.target.checked)}
-                className="rounded border-stage-border bg-stage-dark text-stage-accent"
+                className="rounded border-stage-border bg-stage-surface text-stage-accent"
               />
               Day after
             </label>
@@ -436,7 +436,7 @@ export function CreateDaySheetTemplateForm({
           <button
             type="submit"
             disabled={!formItem.label.trim()}
-            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
           >
             Add
           </button>
@@ -447,7 +447,7 @@ export function CreateDaySheetTemplateForm({
           type="submit"
           form="template-form"
           disabled={loading}
-          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+          className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
         >
           {loading ? 'Saving…' : isEdit ? 'Save changes' : 'Create template'}
         </button>

@@ -17,7 +17,7 @@ When making changes, avoid breaking localhost or the UI. Follow these guidelines
 - `src/app/globals.css` – Change sparingly
 - `tailwind.config.ts` content paths – Keep existing paths; do not broaden or change
 - `src/lib/api.ts` – Avoid changing response handling (e.g. res.json vs res.text)
-- Prefer theme classes (`bg-stage-dark`) over arbitrary values (`bg-[#0f0f12]`)
+- Prefer theme classes (`bg-stage-page`, `bg-stage-surface`, `bg-stage-card`) over arbitrary values (`bg-[#0f0f12]`)
 - `src/components/DashboardLayoutClient.tsx` – Dashboard layout: sidebar is `hidden lg:flex`, mobile header is `flex lg:hidden`. Do not change these breakpoints or remove `isolate`/`shrink-0`/`w-full` from the layout containers.
 
 ## Dev workflow

@@ -206,7 +206,7 @@ export function ContactsSection({
                   type="button"
                   onClick={() => { setError(''); setAddPhase('manual'); resetAddForm(); }}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-stage-border text-stage-muted hover:text-white hover:border-stage-muted disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted disabled:opacity-50"
                 >
                   <PenLine className="h-3 w-3" /> Enter new contact manually
                 </button>
@@ -228,35 +228,35 @@ export function ContactsSection({
                 onChange={(e) => setName(e.target.value)}
                 required
                 placeholder="Name"
-                className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 placeholder="Role"
-                className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
-                className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full px-2 py-1.5 text-sm rounded bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+                className="w-full px-2 py-1.5 text-sm rounded bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
               />
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <div className="flex flex-wrap gap-1.5">
                 <button
                   type="submit"
                   disabled={loading || deletingId != null}
-                  className="px-3 py-1.5 text-sm rounded bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                  className="px-3 py-1.5 text-sm rounded bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
                 >
                   Add contact
                 </button>
@@ -347,7 +347,7 @@ export function ContactsSection({
                 type="button"
                 onClick={() => { setError(''); setAddPhase('manual'); resetAddForm(); }}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg border border-stage-border text-stage-muted hover:text-white hover:border-stage-muted disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg border border-stage-border text-stage-muted hover:text-stage-fg hover:border-stage-muted disabled:opacity-50"
               >
                 <PenLine className="h-4 w-4" /> Enter new contact manually
               </button>
@@ -369,42 +369,42 @@ export function ContactsSection({
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Name"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
               placeholder="Role"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="w-full px-3 py-2 rounded-lg bg-stage-dark border border-stage-border text-white placeholder-zinc-500"
+              className="w-full px-3 py-2 rounded-lg bg-stage-surface border border-stage-border text-white placeholder-zinc-500"
             />
             {error && <p className="text-red-400 text-sm">{error}</p>}
             <div className="flex flex-wrap gap-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-dark font-medium disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-stage-accent text-stage-accentFg font-medium disabled:opacity-50"
               >
                 Add contact
               </button>

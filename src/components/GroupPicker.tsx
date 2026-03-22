@@ -61,7 +61,7 @@ export function GroupPicker({
           <button
             type="button"
             onClick={() => { setSelectedGroup(null); setGroupMembers([]); }}
-            className="flex items-center gap-1.5 text-sm text-stage-muted hover:text-white"
+            className="flex items-center gap-1.5 text-sm text-stage-muted hover:text-stage-fg"
           >
             <ChevronLeft className="h-4 w-4" /> Back to groups
           </button>
@@ -76,7 +76,7 @@ export function GroupPicker({
                 <button
                   type="button"
                   onClick={() => onSelect(selectedGroup.id)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-dark"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-surface"
                 >
                   <div className="p-2 rounded-lg bg-stage-accent/20 shrink-0">
                     <Users className="h-4 w-4 text-stage-accent" />
@@ -92,9 +92,9 @@ export function GroupPicker({
                       key={sg}
                       type="button"
                       onClick={() => onSelect(selectedGroup.id, sg)}
-                      className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-dark"
+                      className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-surface"
                     >
-                      <div className="p-2 rounded-lg bg-stage-dark shrink-0">
+                      <div className="p-2 rounded-lg bg-stage-surface shrink-0">
                         <Users className="h-4 w-4 text-stage-muted" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -126,7 +126,7 @@ export function GroupPicker({
                   key={g.id}
                   type="button"
                   onClick={() => selectGroup(g)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-dark"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-stage-surface"
                 >
                   <div className="p-2 rounded-lg bg-stage-accent/20 shrink-0">
                     <Users className="h-4 w-4 text-stage-accent" />
@@ -143,7 +143,7 @@ export function GroupPicker({
           </div>
         </>
       )}
-      <button type="button" onClick={onCancel} className="text-sm text-stage-muted hover:text-white">
+      <button type="button" onClick={onCancel} className="text-sm text-stage-muted hover:text-stage-fg">
         Cancel
       </button>
     </div>

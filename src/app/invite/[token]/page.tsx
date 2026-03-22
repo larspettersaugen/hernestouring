@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 function InviteAcceptForm() {
   const router = useRouter();
@@ -76,7 +77,10 @@ function InviteAcceptForm() {
 
   if (fetchError) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-sm text-center">
           <h1 className="text-xl font-bold text-white mb-2">Invalid invite</h1>
           <p className="text-stage-muted">{fetchError}</p>
@@ -90,14 +94,20 @@ function InviteAcceptForm() {
 
   if (!personName) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+      <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
         <p className="text-stage-muted">Loading…</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+    <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-2 text-white">Set your password</h1>
         <p className="text-stage-muted text-center text-sm mb-6">
@@ -144,7 +154,7 @@ function InviteAcceptForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-dark font-semibold disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-stage-accent hover:bg-stage-accentHover text-stage-accentFg font-semibold disabled:opacity-50"
           >
             {loading ? 'Setting up…' : 'Create account'}
           </button>
@@ -158,7 +168,10 @@ export default function InvitePage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stage-dark">
+        <main className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-stage-surface">
+          <div className="absolute top-4 right-4 z-10">
+            <ThemeToggle />
+          </div>
           <p className="text-stage-muted">Loading…</p>
         </main>
       }
