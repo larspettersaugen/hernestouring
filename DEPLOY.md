@@ -23,9 +23,9 @@ Vercel imports from Git. Commit and push this repository (including `prisma/migr
    | `DATABASE_URL` | Your Neon connection string |
    | `NEXTAUTH_SECRET` | `openssl rand -base64 32` |
    | `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (replace after first deploy with the real URL, including custom domain if you add one) |
-   | Optional | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `BETA_JOIN_SECRET`, etc. |
+   | Optional | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY` (invites + **password reset**), `BETA_JOIN_SECRET`, etc. |
 
-3. Deploy. The build runs `prisma migrate deploy` then `next build` (see `vercel.json`).
+3. Deploy. The build runs `prisma generate`, `prisma migrate deploy`, then `next build --webpack` (see `vercel.json`).
 
 4. After the first successful deploy, confirm **`NEXTAUTH_URL`** exactly matches the site URL (scheme + host, no trailing slash). Redeploy if you change it.
 
@@ -88,3 +88,16 @@ npm run dev
 ```
 
 If you still have an old SQLite `prisma/dev.db`, stop using it and point `DATABASE_URL` at Postgres instead; run `migrate dev` or `migrate deploy` against the new database.
+
+## Vercel build failed?
+
+Open the deployment → **Building** → expand the log.
+
+| Symptom | What to do |
+|--------|------------|
+| **`prisma migrate deploy` failed** (P3009, “relation already exists”, drift) | Your Neon DB was likely created with `db push` before migrations. See README: use `npm run db:push` once to align, or [Prisma baselining](https://www.prisma.io/docs/guides/migrate/developing-with-create-only). Fix the DB, then **Redeploy**. |
+| **`DATABASE_URL` must start with `postgresql://`** | Add `DATABASE_URL` under Vercel → Settings → Environment Variables for **Production** (and Preview if needed). Redeploy. |
+| **`next build` / TypeScript errors** | Run `npm run verify` locally on `main` after `git pull`; fix errors, push again. |
+| **New tables missing in production** | Ensure **`prisma/migrations/`** is committed and pushed; Vercel only runs migrations that exist in the repo. |
+
+Always **commit and push** `prisma/schema.prisma` and new folders under `prisma/migrations/` when you add features that change the database—otherwise production never applies them.

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
+import Link from 'next/link';
 import { signIn, getProviders } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -16,6 +17,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const fromInvite = searchParams.get('fromInvite') === '1';
+  const passwordResetOk = searchParams.get('reset') === '1';
 
   useEffect(() => {
     getProviders().then((providers) => setHasGoogle(!!providers?.google));
@@ -40,11 +42,7 @@ function LoginForm() {
     const res = await signIn('credentials', { email, password, redirect: false });
     setLoading(false);
     if (res?.error) {
-      setError(
-        process.env.NODE_ENV === 'development'
-          ? `Login failed: ${res.error}. Have you run "npx prisma db seed"?`
-          : 'Invalid email or password'
-      );
+      setError('Invalid email or password');
       return;
     }
     if (!res?.ok) {
@@ -66,6 +64,11 @@ function LoginForm() {
         {fromInvite && (
           <p className="text-sm text-zinc-400 text-center mb-6 -mt-4">
             You already have a profile—sign in with your existing password.
+          </p>
+        )}
+        {passwordResetOk && (
+          <p className="text-sm text-emerald-400 text-center mb-6 -mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2">
+            Password updated. Sign in with your new password.
           </p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -97,6 +100,14 @@ function LoginForm() {
               autoComplete="current-password"
               className="w-full px-3 py-2 rounded-lg bg-stage-card border border-stage-border text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-stage-accent"
             />
+            <div className="mt-1.5 text-right">
+              <Link
+                href="/forgot-password"
+                className="text-xs text-stage-muted hover:text-zinc-300 underline-offset-2 hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
@@ -133,9 +144,6 @@ function LoginForm() {
             </button>
           </>
         )}
-        <p className="mt-6 text-center text-stage-muted text-xs">
-          Demo: admin@tour.local / admin123
-        </p>
       </div>
     </main>
   );

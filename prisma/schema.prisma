@@ -18,6 +18,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   profile   Person?  // optional link to Person profile
+  passwordResetTokens PasswordResetToken[]
+}
+
+/// Single-use email password reset: only tokenHash (SHA-256) is stored, not the raw token.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@index([userId])
+  @@index([userId, createdAt])
 }
 
 model Person {
