@@ -96,6 +96,8 @@ If you still have an old SQLite `prisma/dev.db`, stop using it and point `DATABA
 
 Open the deployment → **Building** → expand the log.
 
+**npm `warn` / Prisma “deprecated” / Next “middleware” messages** are usually **not** why the build failed. Scroll to the **first line containing `Error`**, **`FAILED`**, **`ELIFECYCLE`**, or **`prisma migrate deploy failed`** — that is the real cause.
+
 | Symptom | What to do |
 |--------|------------|
 | **`P1001: Can't reach database server`** during build | Add **`DIRECT_URL`** in Vercel (Neon dashboard → **Connection details** → copy **direct** URI, not pooler). Keep **`DATABASE_URL`** as the **pooler** URL for the running app. Optional: add `connect_timeout=60` to both URLs. Open the Neon project in the dashboard once to wake compute, then **Redeploy**. |
