@@ -28,8 +28,9 @@ export async function sendPasswordResetEmail(
       }),
     });
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      return { sent: false, error: (data as { message?: string }).message || res.statusText };
+      const data = (await res.json().catch(() => ({}))) as { message?: string; name?: string };
+      const detail = data.message || data.name || res.statusText;
+      return { sent: false, error: `Resend ${res.status}: ${detail}` };
     }
     return { sent: true };
   } catch (e) {

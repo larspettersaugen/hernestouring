@@ -62,7 +62,7 @@ Use **one** PostgreSQL database. **Neon** is the recommended default (free tier,
    **If `migrate deploy` errors** (e.g. “relation already exists”): your Neon DB may have been created with `db push` instead of migrations. Use **`npm run db:push`** once to align the schema, then talk to your team about [baselining migrations](https://www.prisma.io/docs/guides/migrate/developing-with-create-only) for the future.
 
    **Tasks page: “TourDateTask does not exist”:** the database is missing the latest migration. Run **`npm run db:migrate:deploy`** (or **`npm run db:push`**) after pulling new code, with `DATABASE_URL` set in `.env` or `.env.local`.  
-   **Password reset:** requires the **`PasswordResetToken`** migration; production needs **`RESEND_API_KEY`** (and verified sender) or reset emails will not send.
+   **Password reset:** requires the **`PasswordResetToken`** migration; production needs **`RESEND_API_KEY`** in Vercel or no email is sent (see deployment logs for `[forgot-password] Resend did not send`). Default **`onboarding@resend.dev`** only delivers to your Resend signup email — verify a domain in Resend and set **`RESEND_FROM_EMAIL`** for real users. **Google-only** sign-in accounts have no password to reset.
 
 4. **Run the app**
 
@@ -101,7 +101,7 @@ Use **one** PostgreSQL database. **Neon** is the recommended default (free tier,
 - **Flights:** Departure/arrival, airports, flight number, booking ref.
 - **Transport:** Per-date transport (bus, car, pickup), time, driver, company.
 - **Contacts:** Tour and per-date contacts (venue, promoter, driver, crew) with phone/email; tap to call/email on mobile.
-- **Auth:** Email/password or Google OAuth. New Google users get viewer role by default. **Forgot password** uses a one-hour email link (Resend + `RESEND_API_KEY`); tokens are hashed in the database and responses do not reveal whether an email exists.
+- **Auth:** Email/password or Google OAuth. New Google users get viewer role by default. **Forgot password** uses a one-hour email link (Resend + `RESEND_API_KEY`); tokens are hashed in the database and responses do not reveal whether an email exists. If mail never arrives, confirm the API key on Vercel, Resend dashboard → **Logs**, and that the account has a password (not Google-only); use a verified **`RESEND_FROM_EMAIL`** domain for delivery to arbitrary addresses.
 - **Roles:** Viewer (read-only), Editor (create/edit), Admin (same as editor).
 - **Beta signup (optional):** Set `BETA_JOIN_SECRET` in `.env` to a long random value (e.g. `openssl rand -hex 32`). Share `NEXTAUTH_URL/join/<that-secret>` with testers—they create a **viewer** account and a **Person** profile without an admin invite. Editors see a **Copy link** box on **People** when this is enabled. Rotate the secret to revoke the link; treat it like a password.
 - **Mobile:** Responsive layout, bottom nav to jump to Schedule / Flights / Transport / Contacts, PWA install.
