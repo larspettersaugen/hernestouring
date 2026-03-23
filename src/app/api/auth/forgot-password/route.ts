@@ -21,6 +21,9 @@ function looksLikeEmail(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 }
 
+/** Vercel: allow time for Neon wake + Prisma retries (Hobby max is still capped ~10s). */
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   let emailRaw = '';
   try {
@@ -88,7 +91,14 @@ export async function POST(req: Request) {
 
         return NextResponse.json(GENERIC);
       },
-      { maxAttempts: 4, delayMs: 1500, logLabel: 'forgot-password' }
+      {
+        maxAttempts: 5,
+        delayMs: 1800,
+        logLabel: 'forgot-password',
+        betweenAttempts: async () => {
+          await prisma.$disconnect().catch(() => undefined);
+        },
+      }
     );
   } catch (err) {
     // Uncaught Prisma errors (e.g. missing PasswordResetToken table, DB down) became 500 and showed "Something went wrong" with no server log context.
