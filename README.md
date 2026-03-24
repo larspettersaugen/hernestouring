@@ -12,6 +12,8 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
 
 **Deploy (Vercel + Supabase):** see [`docs/VERCEL_ENV.md`](docs/VERCEL_ENV.md) for required environment variables and Supabase Auth URL settings.
 
+**UI / Google Stitch:** see [`docs/STITCH_UI.md`](docs/STITCH_UI.md) for how to use [Stitch](https://stitch.withgoogle.com) designs with this Tailwind + theme setup.
+
 ## Setup (from scratch)
 
 Use **one** PostgreSQL database. **Neon** is the recommended default (free tier, no Docker). To use **Supabase** as the Postgres provider without rewriting the app, follow **`docs/SUPABASE_MIGRATION.md`** (Tier A).
