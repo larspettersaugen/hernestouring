@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  // Pooled URL for the app (Neon *-pooler* host). Prisma Migrate uses directUrl (non-pooler) — required on Vercel/CI.
+  // Pooled URL for the app (Neon pooler or Supabase transaction pooler). Prisma Migrate uses directUrl — required on Vercel/CI.
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }

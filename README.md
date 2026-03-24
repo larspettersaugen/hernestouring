@@ -5,14 +5,14 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
 ## Stack
 
 - **Next.js 14** (App Router), TypeScript, Tailwind CSS
-- **Prisma** + **PostgreSQL** (Neon recommended; see **Setup** below and `DEPLOY.md` for Vercel)
+- **Prisma** + **PostgreSQL** (Neon recommended; **Supabase** as host only is supported — see `docs/SUPABASE_MIGRATION.md`)
 - **NextAuth** (credentials + optional Google OAuth, JWT, roles: viewer / editor / admin)
 - **PWA** (production build): installable, optional offline via `@ducanh2912/next-pwa`
 - **Theme:** Light / dark mode (`next-themes`), persisted in `localStorage`. Toggle: sun/moon in the dashboard sidebar (and mobile header), top bar when used, and on login / invite / join pages.
 
 ## Setup (from scratch)
 
-Use **one** PostgreSQL database. **Neon** is the recommended default (free tier, no Docker).
+Use **one** PostgreSQL database. **Neon** is the recommended default (free tier, no Docker). To use **Supabase** as the Postgres provider without rewriting the app, follow **`docs/SUPABASE_MIGRATION.md`** (Tier A).
 
 1. **Install dependencies**
 

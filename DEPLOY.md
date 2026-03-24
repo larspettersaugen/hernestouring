@@ -1,6 +1,8 @@
-# Deploy a public URL (Vercel + Neon)
+# Deploy a public URL (Vercel + Postgres)
 
 This app needs a **PostgreSQL** database and a **HTTPS** base URL so invite links and NextAuth work for people outside your laptop.
+
+**Database host:** These steps use **Neon** as the default example. To host Postgres on **Supabase** instead while keeping Prisma + NextAuth, follow **`docs/SUPABASE_MIGRATION.md`** (Tier A: swap connection strings + migrate data).
 
 **Local `.env`:** If you still have `DATABASE_URL="file:./dev.db"` from SQLite, replace it with a PostgreSQL URL (see `.env.example`). Prisma no longer accepts `file:` URLs for this project.
 
