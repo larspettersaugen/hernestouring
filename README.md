@@ -10,6 +10,8 @@ Web app for tour managers and booking agents to manage tour data (schedules, fli
 - **PWA** (production build): installable, optional offline via `@ducanh2912/next-pwa`
 - **Theme:** Light / dark mode (`next-themes`), persisted in `localStorage`. Toggle: sun/moon in the dashboard sidebar (and mobile header), top bar when used, and on login / invite / join pages.
 
+**Deploy (Vercel + Supabase):** see [`docs/VERCEL_ENV.md`](docs/VERCEL_ENV.md) for required environment variables and Supabase Auth URL settings.
+
 ## Setup (from scratch)
 
 Use **one** PostgreSQL database. **Neon** is the recommended default (free tier, no Docker). To use **Supabase** as the Postgres provider without rewriting the app, follow **`docs/SUPABASE_MIGRATION.md`** (Tier A).
