@@ -64,6 +64,9 @@ model Person {
   groupMembers    GroupMember[]
   ownedProjects   Project[] @relation("ProjectOwner")
   managedTours    Tour[]    @relation("TourManager")
+
+  @@index([type])
+  @@index([userId])
 }
 
 model Group {
@@ -85,6 +88,7 @@ model GroupMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@unique([groupId, personId])
+  @@index([personId])
 }
 
 model Invite {
@@ -105,6 +109,8 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tours     Tour[]
+
+  @@index([ownerId])
 }
 
 model Tour {
@@ -124,6 +130,11 @@ model Tour {
   contacts         Contact[]
   travelingMembers TravelGroupMember[]
   daySheetTemplates DaySheetTemplate[]
+
+  @@index([projectId])
+  @@index([managerId])
+  @@index([startDate])
+  @@index([endDate])
 }
 
 model DaySheetTemplate {
@@ -133,6 +144,8 @@ model DaySheetTemplate {
   name      String   // e.g. "Standard concert day"
   createdAt DateTime @default(now())
   items     DaySheetTemplateItem[]
+
+  @@index([tourId])
 }
 
 model DaySheetTemplateItem {
@@ -146,6 +159,8 @@ model DaySheetTemplateItem {
   notes           String?
   sortOrder       Int      @default(0)
   dayAfter        Boolean  @default(false)
+
+  @@index([templateId])
 }
 
 model TourDate {
@@ -187,6 +202,10 @@ model TourDate {
   tasks       TourDateTask[]
 
   @@index([venueId])
+  @@index([tourId])
+  @@index([tourId, date])
+  @@index([date])
+  @@index([endDate])
 }
 
 model TourDateTask {
@@ -198,6 +217,8 @@ model TourDateTask {
   sortOrder  Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([tourDateId])
 }
 
 /// Guest-list names for a show date (not the same as traveling crew).
@@ -212,6 +233,8 @@ model TourDateGuestListEntry {
   sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@index([tourDateId])
 }
 
 model Advance {
@@ -261,6 +284,8 @@ model AdvanceFile {
   mimeType       String?
   sizeBytes      Int?
   createdAt      DateTime @default(now())
+
+  @@index([tourDateId])
 }
 
 enum VenueCategory {
@@ -320,6 +345,11 @@ model Contact {
   notes           String?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
+
+  @@index([tourId])
+  @@index([tourDateId])
+  @@index([personId])
+  @@index([venueContactId])
 }
 
 model ScheduleItem {
@@ -335,6 +365,8 @@ model ScheduleItem {
   dayAfter        Boolean  @default(false) // true if time is after midnight (next calendar day)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index([tourDateId])
 }
 
 model Flight {
@@ -351,6 +383,10 @@ model Flight {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   passengers   FlightPassenger[]
+
+  @@index([tourId])
+  @@index([tourDateId])
+  @@index([tourId, departureTime])
 }
 
 model FlightPassenger {
@@ -362,6 +398,7 @@ model FlightPassenger {
   bookingRef          String?
   createdAt           DateTime @default(now())
   @@unique([flightId, travelGroupMemberId])
+  @@index([travelGroupMemberId])
 }
 
 model TravelGroupMember {
@@ -382,6 +419,10 @@ model TravelGroupMember {
   flightPassengers FlightPassenger[]
   transportPassengers TransportPassenger[]
   hotelGuests HotelGuest[]
+
+  @@index([tourId])
+  @@index([personId])
+  @@index([tourId, personId])
 }
 
 model TourDateMember {
@@ -392,23 +433,44 @@ model TourDateMember {
   travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
   createdAt           DateTime @default(now())
   @@unique([tourDateId, travelGroupMemberId])
+  @@index([travelGroupMemberId])
 }
 
 model Transport {
-  id          String   @id @default(cuid())
-  tourDateId  String
-  tourDate    TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
-  type        String   // "bus", "car", "pickup"
-  time        String
-  dayAfter    Boolean  @default(false) // true if time is after midnight (next calendar day)
-  driver      String?
-  driverPhone String?
-  driverEmail String?
-  company     String?
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  passengers  TransportPassenger[]
+  id                 String   @id @default(cuid())
+  tourDateId         String
+  tourDate           TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+  type               String   // "bus", "car", "pickup", "train", "taxi", ...
+  time               String
+  dayAfter           Boolean  @default(false) // true if time is after midnight (next calendar day)
+  driver             String?  // driver name (free text). When transportCompanyId is set, this is the driver from that company.
+  driverPhone        String?  // driver phone (or taxi phone when type = taxi)
+  driverEmail        String?  // (legacy / optional)
+  company            String?  // free text fallback (legacy). Prefer transportCompanyId for saved companies.
+  /// Optional link to a saved transport company in the database (mirrors how venues work).
+  transportCompanyId String?
+  transportCompany   TransportCompany? @relation(fields: [transportCompanyId], references: [id], onDelete: SetNull)
+  /// Booking reference (e.g. taxi order ref, shuttle confirmation).
+  bookingRef         String?
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  passengers         TransportPassenger[]
+
+  @@index([transportCompanyId])
+  @@index([tourDateId])
+}
+
+/// Saved transport companies (reference list, similar to Venue).
+model TransportCompany {
+  id         String      @id @default(cuid())
+  name       String
+  phone      String?
+  email      String?
+  notes      String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  transports Transport[]
 }
 
 model TransportPassenger {
@@ -419,6 +481,7 @@ model TransportPassenger {
   travelGroupMember   TravelGroupMember @relation(fields: [travelGroupMemberId], references: [id], onDelete: Cascade)
   createdAt           DateTime @default(now())
   @@unique([transportId, travelGroupMemberId])
+  @@index([travelGroupMemberId])
 }
 
 model Hotel {
@@ -433,6 +496,8 @@ model Hotel {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   guests       HotelGuest[]
+
+  @@index([tourDateId])
 }
 
 model HotelGuest {
@@ -444,4 +509,5 @@ model HotelGuest {
   roomNumber          String?
   createdAt           DateTime @default(now())
   @@unique([hotelId, travelGroupMemberId])
+  @@index([travelGroupMemberId])
 }
